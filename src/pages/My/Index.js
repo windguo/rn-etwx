@@ -53,7 +53,7 @@ export default class Me extends Component {
     static navigationOptions = {
         tabBarLabel: '我的',
         tabBarIcon: ({ tintColor, focused }) => (
-            <IconSimple name="user" size={22} color={focused ? '#027fff' : 'black'} />
+            <IconSimple name="user" size={22} color={focused ? '#fe5f01' : 'black'} />
         ),
         header: ({ navigation }) => {
             return (

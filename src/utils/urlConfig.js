@@ -23,22 +23,22 @@ export default urlConfig = {
 //随机
     sectionListDataRand:'/e/api/ertongwenxue?getJson=column',
     //发布地址
-    pubLishUrl:'http://m.jianjie8.com/qianmingFromapp',
+    pubLishUrl:'http://m.jianjie8.com/ertongFromapp',
     //点赞或者踩 {classid:2,id:2,dotop:1,doajax:1,ajaxarea:'diggnum'dotop这个字段 传0 是踩踩 传1是赞}
     thumbUpUrl:'/e/public/digg/post/index.php',
     thumbDownUrl:'/e/public/digg/post/diggbot.php',
     LoginUrl:  '/e/member/doaction.php',
     // 我发布的内容
-    MyPublishUrl:  '/e/api/qianming?getJson=article',
+    MyPublishUrl:  '/e/api/ertong?getJson=article',
     // 我收藏的内容
-    MyFavasUrl: '/e/api/qianming/?getJson=favas',
-    userInfo: '/e/api/qianming?getJson=article',
+    MyFavasUrl: '/e/api/ertong/?getJson=favas',
+    userInfo: '/e/api/ertong?getJson=article',
     //更新检测地址
     CheckUpdate:"/e/api/ertongwenxue?getJson=version",
     //分享出去的图片
-    thumbImage: 'http://jianjie8.com/skin/h8/images/icon_share.png',
+    thumbImage: 'http://jianjie8.com/skin/ertong/images/icon_share.png',
     //复制完跳去详情
-     DetailUrl: "http://m.jianjie8.com/detail/",
+     DetailUrl: "http://ertong.jianjie8.com/detail/",
     Search:'/e/api/ertongwenxue/?classid=55&getJson=',
      DetailUrl:'/e/api/ertongwenxue/?getJson=content'
 

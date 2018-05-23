@@ -6,6 +6,7 @@ import storageKeys from '../utils/storageKeyValue'
 import IconSimple from 'react-native-vector-icons/SimpleLineIcons';
 import * as WeChat from 'react-native-wechat';
 import HTMLView from 'react-native-htmlview';
+import Toast from 'react-native-root-toast';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,7 +19,7 @@ export default class MusicPlayer extends Component {
     static navigationOptions = {
         tabBarLabel: '读故事',
         tabBarIcon: ({ tintColor, focused }) => (
-            <MaterialIcons name="wrap-text" size={22} color={focused ? "red" : 'black'} />
+            <MaterialIcons name="wrap-text" size={22} color={focused ? "#fe5f01" : 'black'} />
         ),
         header: null
     };
@@ -86,6 +87,14 @@ export default class MusicPlayer extends Component {
     }
 
     componentDidMount() {
+        Toast.show('努力加载故事中...宝宝们稍等哦...', {
+            // duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+            // shadow: true,
+            // animation: true,
+            hideOnPress: true,
+            // delay: 100,
+        });
         this.spin()
     }
 
@@ -97,7 +106,10 @@ export default class MusicPlayer extends Component {
     }
 
     setTime(data) {
-        let sliderValue = parseInt(this.state.currentTime)
+        let sliderValue = parseInt(this.state.currentTime);
+        if (sliderValue){
+            console.log('开始播放了');
+        };
         this.setState({
             slideValue: sliderValue,
             currentTime: data.currentTime
@@ -229,9 +241,10 @@ export default class MusicPlayer extends Component {
                 <Video
                     ref={video => this.player = video}
                     source={{ uri: this.props.navigation.state.params.mp3_url }}
-                    volume={5.0}
+                    volume={1.0}
                     paused={this.state.paused}
                     playInBackground={true}
+                    playWhenInactive={false}
                     onLoadStart={this.loadStart}
                     onLoad={data => this.setDuration(data)}
                     onProgress={(data) => this.setTime(data)}

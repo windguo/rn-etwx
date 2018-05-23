@@ -409,16 +409,17 @@ export default class Home extends Component {
                 fontSize: 18,
                 lineHeight: 26,
                 paddingBottom: 10,
-                fontWeight: 'bold'
+                fontWeight: '300'
             }} onPress={() => {
                 this.props.navigation.navigate('Detail', { id: item.id, title: item.title });
             }}>
                 {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}
             </Text>
             <Text style={{
-                fontSize: 18,
                 lineHeight: 26,
                 fontWeight: '300'
+            }} onPress={() => {
+                this.props.navigation.navigate('Detail', { id: item.id, title: item.title });
             }}>
                 {item.smalltext && item.smalltext.replace(/^(\r\n)|(\n)|(\r)/, "")}
             </Text>
@@ -462,7 +463,7 @@ export default class Home extends Component {
                                         this.props.navigation.navigate('Detail', { id: item.id, title: item.title });
                                     }}
                                     hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
-                                    <Text style={{ color:'#d25974'}}>查看全文 >></Text>
+                                    <Text style={{ color:'#fe5f01'}}>查看全文 >></Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{flexDirection: 'row'}}>

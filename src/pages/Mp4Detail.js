@@ -18,7 +18,7 @@ export default class MusicPlayer extends Component {
     static navigationOptions = {
         tabBarLabel: '读故事',
         tabBarIcon: ({ tintColor, focused }) => (
-            <MaterialIcons name="wrap-text" size={22} color={focused ? "red" : 'black'} />
+            <MaterialIcons name="wrap-text" size={22} color={focused ? "#fe5f01" : 'black'} />
         ),
         header: null
     };

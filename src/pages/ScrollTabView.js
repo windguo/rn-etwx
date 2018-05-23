@@ -58,7 +58,7 @@ export  default  class ScrollTabView extends Component {
     static navigationOptions = {
         tabBarLabel: '读故事',
         tabBarIcon: ({tintColor,focused}) => (
-            <IconSimple name="list" size={22} color={focused ? "red" : 'black'} />
+            <IconSimple name="list" size={22} color={focused ? "#fe5f01" : 'black'} />
         ),
         header: ({navigation}) => {
             return (
@@ -357,8 +357,8 @@ export  default  class ScrollTabView extends Component {
                 }
             })
 
-            return <ScrollableTabBar activeTextColor='#d25974' underlineStyle={{ height: 0, width: 0 }}
-                backgroundColor='#fff' textStyle={{fontSize: 16, fontWeight:'100'}}
+            return <ScrollableTabBar activeTextColor='#fe5f01' underlineStyle={{ height: 0, width: 0 }}
+                backgroundColor='#fdf5ed' textStyle={{fontSize: 16, fontWeight:'100'}}
                                      tabStyle={{paddingLeft: 10, paddingRight: 10}} />;
         }
         pageNumber = (number) => {
@@ -469,9 +469,3 @@ const styles = StyleSheet.create({
 
 
 });
-
-
-
-
-
-

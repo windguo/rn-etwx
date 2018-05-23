@@ -54,7 +54,7 @@ export  default  class ScrollTabView extends Component {
     static navigationOptions = {
         tabBarLabel: '看故事',
         tabBarIcon: ({tintColor,focused}) => (
-            <MaterialIcons name="ondemand-video" size={22} color={focused ? "red":'black'} />
+            <MaterialIcons name="ondemand-video" size={22} color={focused ? "#fe5f01":'black'} />
         ),
         header: ({navigation}) => {
             return (
@@ -232,7 +232,7 @@ export  default  class ScrollTabView extends Component {
                 }
             })
 
-            return <ScrollableTabBar activeTextColor='#d25974' underlineStyle={{height: 0,width:0}}
+            return <ScrollableTabBar activeTextColor='#fe5f01' underlineStyle={{height: 0,width:0}}
                                      backgroundColor='white' textStyle={{fontSize: 16, fontWeight:'100'}}
                                      tabStyle={{paddingLeft: 10, paddingRight: 10}} />;
         }
