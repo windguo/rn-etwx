@@ -40,12 +40,12 @@ import storageKeys from '../utils/storageKeyValue'
 import * as WeChat from 'react-native-wechat';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconSimple from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import HttpUtil from  '../utils/HttpUtil';
 import ImageProgress from 'react-native-image-progress';
 import {Pie,Bar,Circle,CircleSnail} from 'react-native-progress';
 import AutoHeightImage from 'react-native-auto-height-image';
-import CustomImage from '../components/CustomImage'
 import GuessText from  '../components/GuessText'
 export default class Home extends Component {
     static navigationOptions = {
@@ -402,32 +402,53 @@ export default class Home extends Component {
                             id: item.id,
                             title: item.title,
                             titlepic: item.titlepic,
-                            mp3_url:item.mp3_url 
+                            nurl:item.nurl 
                         });
                 }} style={{ fontSize: 18, paddingBottom: 10 }}>{item.title}</Text>
             </View>
-            <View style={{ paddingTop: 10, paddingBottom: 10}}>
-                <Text activeOpacity={0.8} onPress={() => {
+            <View style={styles.imgposition}>
+                <View activeOpacity={0.8} onPress={() => {
                     this.props.navigation.navigate(
                         'Mp3Detail', {
                             id: item.id,
                             title: item.title,
                             titlepic: item.titlepic,
-                            mp3_url: item.mp3_url
+                            nurl: item.nurl
                         });
                 }} >
-                    {item.titlepic ? <ImageProgress
-                        source={{ uri: item.titlepic }}
-                        resizeMode={'cover'}
-                        indicator={Pie}
-                        indicatorProps={{
-                            size: 40,
-                            borderWidth: 0,
-                            color: 'rgba(255, 160, 0, 0.8)',
-                            unfilledColor: 'rgba(200, 200, 200, 0.1)'
-                        }}
-                        style={{ width: WIDTH - 40, height: 100 }} /> : null}
-                </Text>
+                    <Text onPress={() => {
+                        this.props.navigation.navigate(
+                            'Mp3Detail', {
+                                id: item.id,
+                                title: item.title,
+                                titlepic: item.titlepic,
+                                nurl: item.nurl
+                            });
+                    }}>
+                        {item.titlepic ? <ImageProgress
+                            source={{ uri: item.titlepic }}
+                            resizeMode={'cover'}
+                            indicator={Pie}
+                            indicatorProps={{
+                                size: 40,
+                                borderWidth: 0,
+                                color: 'rgba(255, 160, 0, 0.8)',
+                                unfilledColor: 'rgba(200, 200, 200, 0.1)'
+                            }}
+                            style={{ width: WIDTH - 40, height: 100 }} /> : null}
+                    </Text>
+                    <Text style={styles.absoluteView} onPress={() => {
+                        this.props.navigation.navigate(
+                            'Mp3Detail', {
+                                id: item.id,
+                                title: item.title,
+                                titlepic: item.titlepic,
+                                nurl: item.nurl
+                            });
+                    }}>
+                        <MaterialIcons name="play-circle-filled" size={65} color='#fe5f01' />
+                    </Text>
+                </View>
             </View>
         </View>
     }
@@ -453,7 +474,7 @@ export default class Home extends Component {
                                                 id: item.id,
                                                 title: item.title,
                                                 titlepic: item.titlepic,
-                                                mp3_url: item.mp3_url
+                                                nurl: item.nurl
                                             });
                                     }}
                                     hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
@@ -582,5 +603,19 @@ const styles = StyleSheet.create({
     shareIcon: {
         width: 40,
         height: 40
+    },
+    imgposition: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    absoluteView: {
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        top: '40%',
+        left: '40%',
+        right: '40%',
+        bottom: '40%'
     }
 });

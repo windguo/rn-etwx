@@ -416,6 +416,7 @@ export default class Home extends Component {
                 {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}
             </Text>
             <Text style={{
+                fontSize: 16,
                 lineHeight: 26,
                 fontWeight: '300'
             }} onPress={() => {

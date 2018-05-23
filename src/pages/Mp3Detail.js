@@ -353,7 +353,7 @@ export default class MusicPlayer extends Component {
                 </View>
                 <Video
                     ref={video => this.player = video}
-                    source={{ uri: this.props.navigation.state.params.mp3_url }}
+                    source={{ uri: this.props.navigation.state.params.nurl }}
                     volume={1.0}
                     paused={this.state.paused}
                     playInBackground={true}
