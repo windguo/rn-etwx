@@ -10,7 +10,7 @@ import Toast from 'react-native-root-toast';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { commonStyle } from '../../commonStyle'
 import Video from 'react-native-video'
 import { VibrancyView, BlurView } from 'react-native-blur'
@@ -38,7 +38,7 @@ export default class MusicPlayer extends Component {
             currentIndex: 0,
             playMode: 0,
             spinValue: new Animated.Value(0),
-            musicInfo: {},
+            musicInfo: {}
         }
         this.spinAnimated = Animated.timing(this.state.spinValue, {
             toValue: 1,
@@ -87,11 +87,12 @@ export default class MusicPlayer extends Component {
     }
 
     componentDidMount() {
-        Toast.show('努力加载故事中...宝宝们稍等哦...', {
-            // duration: Toast.durations.LONG,
+        Toast.show('努力加载故事中......', {
+            duration: 10000,
             position: Toast.positions.CENTER,
-            // shadow: true,
-            // animation: true,
+            textColor:'#fff',
+            shadow: true,
+            animation: true,
             hideOnPress: true,
             // delay: 100,
         });
@@ -150,7 +151,94 @@ export default class MusicPlayer extends Component {
     showMessageBar = title => msg => type => {
         // 报错信息
     }
-
+    clickToShare = (type) => {
+        console.log('XXXXXXXXXXXXX', urlConfig.thumbImage);
+        this.close();
+        WeChat.isWXAppInstalled().then((isInstalled) => {
+            if (isInstalled) {
+                if (type === 'Session') {
+                    WeChat.shareToSession({
+                        imageUrl: this.state.data && this.state.data.nurl,
+                        type: 'news',
+                        webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                    }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((e) => {
+                        if (error.message != -2) {
+                            Toast.show(error.message);
+                        }
+                    });
+                } else {
+                    WeChat.shareToTimeline({
+                        imageUrl: this.state.data && this.state.data.nurl,
+                        type: 'news',
+                        webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                    }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                        if (error.message != -2) {
+                            Toast.show(error.message);
+                        }
+                    });
+                }
+            } else {
+            }
+        });
+    }
+    show = (item) => {
+        this.state.data = item;
+        if (Platform.OS === 'android') {
+            this.share()
+            return;
+        }
+        this._ViewHeight.setValue(0);
+        this.setState({
+            visible: true
+        }, Animated.timing(this._ViewHeight, {
+            fromValue: 0,
+            toValue: 140, // 目标值
+            duration: 200, // 动画时间
+            easing: Easing.linear // 缓动函数
+        }).start());
+    };
+    close = () => {
+        this.setState({
+            visible: false
+        });
+    };
+    share = async () => {
+        let data = await NativeModules.NativeUtil.showDialog();
+        if (data.wechat === 3) {
+            this.clickToReport();
+            return;
+        }
+        if (data) {
+            WeChat.isWXAppInstalled().then((isInstalled) => {
+                if (isInstalled) {
+                    if (data.wechat === 1) {
+                        WeChat.shareToSession({
+                            imageUrl: this.state.data && this.state.data.nurl,
+                            type: 'news',
+                            webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                        }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                            if (error.message != -2) {
+                                Toast.show(error.message);
+                            }
+                        });
+                    } else if (data.wechat === 2) {
+                        WeChat.shareToSession({
+                            imageUrl: this.state.data && this.state.data.nurl,
+                            type: 'news',
+                            webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                        }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                            if (error.message != -2) {
+                                Toast.show(error.message);
+                            }
+                        });
+                    }
+                } else {
+                    Toast.show("没有安装微信软件，请您安装微信之后再试");
+                }
+            });
+            console.log('data', data)
+        }
+    };
     renderPlayer() {
         return (
             <View style={styles.bgContainer}>
@@ -179,7 +267,13 @@ export default class MusicPlayer extends Component {
                     style={styles.djCard}>
                 </View>
                 <Image
-                    style={{ width: 280, height: 280, alignSelf: 'center', position: 'absolute', top: 100 }}
+                    style={{
+                        width: 280, height: 280, alignSelf: 'center', position: 'absolute',
+                        top:95,
+                        ...ifIphoneX({
+                            top: 248,
+                        })
+                    }}
                     source={require('../../bgCD.png')}
                 />
                 <Animated.Image
@@ -189,7 +283,10 @@ export default class MusicPlayer extends Component {
                         borderRadius: 85,
                         alignSelf: 'center',
                         position: 'absolute', 
-                        top: 155,
+                        top: 150,
+                        ...ifIphoneX({
+                            top:300
+                        }),
                         transform: [{
                             rotate: this.state.spinValue.interpolate({
                                 inputRange: [0, 1],
@@ -223,16 +320,32 @@ export default class MusicPlayer extends Component {
                                 onPress={() => this.play()}
                             >
                                 {this.state.paused ? 
-                                    <MaterialIcons name={'play-arrow'} size={25} color='#ffffff' /> : 
-                                    <MaterialIcons name={'pause'} size={25} color='#ffffff' />
+                                    <MaterialIcons name={'play-arrow'} size={30} color='#ffffff' /> : 
+                                    <MaterialIcons name={'pause'} size={30} color='#ffffff' />
                                 }
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', marginLeft: 10 }}
+                                onPress={() => this.clickToShare('Session')}
+                            >
+                                <View style={styles.shareContent}>
+                                    <Icon name="wechat" size={30} color='white' />
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', marginLeft: 10 }}
+                                onPress={() => this.clickToShare('TimeLine')}
+                            >
+                                <View style={styles.shareContent}>
+                                    <Image style={{width:30,height:30}} source={require('../assets/share_icon_moments.png')} />
+                                </View>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={{ flexDirection: 'row', marginLeft: 10 }}
                                 onPress={() => this.clickToReport()}
                             >
                                 <View style={styles.shareContent}>
-                                    <IconSimple name="exclamation" size={25} color='#ffffff' />
+                                    <IconSimple name="exclamation" size={30} color='white' />
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -349,11 +462,10 @@ const styles = StyleSheet.create({
     djCard: {
         width: 300,
         height: 300,
+        top: 20,
         ...ifIphoneX({
-            top: 4,
-        }, {
-            top: 26,
-            }),
+            top: 150,
+        }),
         borderColor: commonStyle.gray,
         borderWidth: 20,
         borderRadius: 190,
