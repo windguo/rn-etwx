@@ -126,7 +126,7 @@ export  default  class web extends Component {
     _onRefresh = () =>{};
 }
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#027fff',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88

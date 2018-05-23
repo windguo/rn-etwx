@@ -49,13 +49,12 @@ import SplashScreen from 'react-native-splash-screen'
 import IconSimple from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HttpUtil from  '../utils/HttpUtil';
-//<View style={{...header}}>
-// <Image source={require('../assets/reload.png')} style={{width: 25, height: 25}}/>
+
 export  default  class ScrollTabView extends Component {
     static navigationOptions = {
-        tabBarLabel: '推荐',
+        tabBarLabel: '听故事',
         tabBarIcon: ({tintColor,focused}) => (
-            <IconSimple name="shuffle" size={22} color={focused ? "red":'black'} />
+            <IconSimple name="music-tone-alt" size={22} color={focused ? "red":'black'} />
         ),
         header: ({navigation}) => {
             return (
@@ -64,15 +63,14 @@ export  default  class ScrollTabView extends Component {
                         navigation.state.routes[0].routes[0].params.leftFuc && navigation.state.routes[0].routes[0].params.leftFuc();
                     }}>
                         <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7 }}>
-                            <MaterialIcons name="search" size={25} color='white' />
+                            <MaterialIcons name="search" size={25} color='#ffffff' />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: 'white', fontWeight: '100' }}>网名大全</Text>
+                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>儿童文学</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
                         navigation.state.routes[0].routes[0].params.rightFuc && navigation.state.routes[0].routes[0].params.rightFuc();
                     }}>
-                        <View style={{ justifyContent: 'center', marginRight: 10, alignItems: 'center', height: 43.7 }}>
-                            <MaterialIcons name="center-focus-strong" size={25} color='white' />
+                        <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
                         </View>
                     </TouchableOpacity>
                 </ImageBackground>
@@ -123,7 +121,17 @@ export  default  class ScrollTabView extends Component {
        // WeChat.registerApp('wxd750cac4fb66b983');
         this.props.navigation.setParams({
             rightFuc: () => {
-                lthis.props.navigation.navigate('Creat');
+                let url = '';
+                if (global.activeClassId === '0' || global.activeClassId === '1'){
+                    url = urlConfig.pubLishUrl;
+                }else{
+                    url = urlConfig.pubLishUrl + '/?classid=' + global.activeClassId;
+                }
+                if (global.userInfo){
+                    this.props.navigation.navigate('Web',{url:url});
+                }else{
+                    this.props.navigation.navigate('Login');
+                }
 
             },
             leftFuc: () => {
@@ -224,7 +232,7 @@ export  default  class ScrollTabView extends Component {
                 }
             })
 
-            return <ScrollableTabBar activeTextColor='red' underlineStyle={{height: 0,width:0}}
+            return <ScrollableTabBar activeTextColor='#d25974' underlineStyle={{height: 0,width:0}}
                                      backgroundColor='white' textStyle={{fontSize: 16, fontWeight:'100'}}
                                      tabStyle={{paddingLeft: 10, paddingRight: 10}} />;
         }
@@ -282,7 +290,7 @@ export  default  class ScrollTabView extends Component {
     }
     }
     const header = {
-        backgroundColor: '#C7272F',
+        backgroundColor: '#027fff',
         ...ifIphoneX({
             paddingTop: 44,
             height: 88

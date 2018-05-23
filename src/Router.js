@@ -15,10 +15,13 @@ import {
 } from 'react-native';
 import {StackNavigator,TabNavigator} from 'react-navigation';
 import Detail from './pages/Detail';
+import Mp3Detail from './pages/Mp3Detail';
+import Mp4Detail from './pages/Mp4Detail';
 import web from './pages/web';
 import Home from './pages/Home';
 import ScrollTabView from './pages/ScrollTabView';
 import ScrollTabViewRand from './pages/ScrollTabViewRand';
+import ScrollTabViewVideo from './pages/ScrollTabViewVideo';
 import Tab from './components/Tab'
 import Login from  './pages/Login'
 import SearchTag from './pages/Search/index';
@@ -27,10 +30,13 @@ import My from './pages/My/Index';
 import Publish from './pages/My/Publish'
 import Collection from './pages/My/Collection'
 import User from './pages/User'
-import Creat from './pages/Creat/index'
-import CreatTag from './pages/Creat/creat'
+
+import Creat from './pages/Creat/index';
+import CreatTag from './pages/Creat/creat';
+import Cdetail from './pages/Creat/detail';
+
 const tabbaroption = {
-    activeTintColor: 'red',
+    activeTintColor: '#027fff',
     inactiveTintColor: '#999999',
     showIcon: true,
     style: {
@@ -91,15 +97,17 @@ const NavgationApp = StackNavigator({
     Home: {screen: Home},
     Index: {screen: TabNavigaApp},
     Detail: {screen: Detail},
+    Mp3Detail: {screen: Mp3Detail},
+    Mp4Detail: {screen: Mp4Detail},
     Web: {screen: web},
     Login: {screen: Login},
     Publish: {screen: Publish},
     Collection: {screen: Collection},
     User: {screen: User},
+    CreatTag: {screen: CreatTag},
     SearchTag: {screen: SearchTag},
     Search:{screen:Search},
-    Creat:{screen:Creat},
-    CreatTag: { screen: CreatTag}
+    Cdetail:{screen:Cdetail}
 }, {initialRouteName: 'Index'});
 export default class Router extends React.Component {
     render() {

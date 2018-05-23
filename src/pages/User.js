@@ -61,7 +61,7 @@ export default class User extends Component {
                             <IconSimple name="arrow-left" size={20} color='white' />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', fontWeight: 'bold', lineHeight: 43.7, color: 'white' }}>{navigation.state.routes[navigation.state.index].params && navigation.state.routes[navigation.state.index].params.username + '发布的内容'}</Text>
+                    <Text style={{ fontSize: 17, textAlign: 'center', fontWeight: '100', lineHeight: 43.7, color: 'white' }}>{navigation.state.routes[navigation.state.index].params && navigation.state.routes[navigation.state.index].params.username + '发布的内容'}</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
                     }}>
                         <View style={{ justifyContent: 'center', marginRight: 10, alignItems: 'center', height: 43.7, backgroundColor: 'transparent', width: 20 }}>
@@ -126,7 +126,7 @@ export default class User extends Component {
                 if (isInstalled) {
                     if (data.wechat === 1) {
                         WeChat.shareToSession({
-                            title: "【网名分享】",
+                            title: "【签名分享】",
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
                             type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -138,7 +138,7 @@ export default class User extends Component {
                         });
                     } else if (data.wechat === 2) {
                         WeChat.shareToTimeline({
-                            title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
+                            title: "【签名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
                             type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -167,7 +167,7 @@ export default class User extends Component {
             if (isInstalled) {
                 if (type === 'Session') {
                     WeChat.shareToSession({
-                        title: "【网名分享】",
+                        title: "【签名分享】",
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
                         type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -179,7 +179,7 @@ export default class User extends Component {
                     });
                 } else {
                     WeChat.shareToTimeline({
-                        title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
+                        title: "【签名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/, ""),
                         type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -212,7 +212,7 @@ export default class User extends Component {
                         overflow: 'hidden'
                     }}>
                         <View style={styles.shareParent}>
-                            {/* <TouchableOpacity
+                            <TouchableOpacity
                                 style={styles.base}
                                 onPress={() => this.clickToShare('Session')}
                             >
@@ -229,7 +229,7 @@ export default class User extends Component {
                                     <Image style={styles.shareIcon} source={require('../assets/share_icon_moments.png')} />
                                     <Text style={styles.spinnerTitle}>微信朋友圈</Text>
                                 </View>
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.base}
                                 onPress={() => this.clickToReport()}
@@ -405,7 +405,8 @@ export default class User extends Component {
                     paddingBottom: 10,
                     fontWeight: '300'
                 }} onPress={() => { this.setClipboardContent(item.title && item.title + item.ftitle && item.ftitle, index, item) }}>
-                    {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}{'\n'}                     {item.ftitle && item.ftitle.replace(/^(\r\n)|(\n)|(\r)/, "")}
+                    {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}{'\n'}
+                    {item.ftitle && item.ftitle.replace(/^(\r\n)|(\n)|(\r)/, "")}
                 </Text>
             </View>
         }
@@ -456,7 +457,7 @@ export default class User extends Component {
                                         color: '#666666',
                                         fontWeight: '100'
                                     }}>
-                                        {formatData(parseInt(item.newstime))}
+                                        
                                     </Text>
                                 </View>
                         </View>
@@ -491,13 +492,13 @@ export default class User extends Component {
                             <View style={{flexDirection: 'row'}}>
                                 <View style={{flexDirection: 'row',marginLeft: 10}}>
                                     <TouchableOpacity activeOpacity={1} onPress={()=>{this.PostThumb(item,1,index)}} hitSlop={{left:10,right:10,top:10,bottom:10}}>
-                                        {item.isLike ?   <IconSimple name="like" size={15} color='red'/> : <IconSimple name="like" size={15} color='#5C5C5C'/>}
+                                        {item.isLike ?   <IconSimple name="like" size={15} color='#027fff'/> : <IconSimple name="like" size={15} color='#5C5C5C'/>}
                                     </TouchableOpacity>
                                     <Text style={{marginLeft: 5,fontWeight:'100'}}>{item.diggtop && item.diggtop}</Text>
                                 </View>
                                 <View style={{flexDirection: 'row', marginLeft: 10}}>
                                     <TouchableOpacity activeOpacity={1} onPress={()=>{this.PostThumb(item,0,index)}} hitSlop={{left:10,right:10,top:10,bottom:10}}>
-                                        {item.isUnLike ?   <IconSimple name="dislike" size={15} color='red'/> : <IconSimple name="dislike" size={15} color='#5C5C5C'/>}
+                                        {item.isUnLike ?   <IconSimple name="dislike" size={15} color='#027fff'/> : <IconSimple name="dislike" size={15} color='#5C5C5C'/>}
                                     </TouchableOpacity>
                                     <Text style={{marginLeft: 5,fontWeight:'100'}}>{item.diggbot && item.diggbot}</Text>
                                 </View>
@@ -596,7 +597,7 @@ const styles = StyleSheet.create({
     }
 });
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#027fff',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88

@@ -53,14 +53,24 @@ export default class Me extends Component {
     static navigationOptions = {
         tabBarLabel: '我的',
         tabBarIcon: ({ tintColor, focused }) => (
-            <IconSimple name="user" size={22} color={focused ? "red" : 'black'} />
+            <IconSimple name="user" size={22} color={focused ? '#027fff' : 'black'} />
         ),
         header: ({ navigation }) => {
             return (
                 <ImageBackground style={{ ...header }} source={require('../../assets/backgroundImageHeader.png')} resizeMode='cover'>
-                    <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7 }}></View>
-                    <Text style={{ fontSize: 16, textAlign: 'center', lineHeight: 43.7, color: 'white', fontWeight: '100' }}>个人中心</Text>
-                    <View style={{ justifyContent: 'center', marginRight: 10, alignItems: 'center', height: 43.7 }}></View>
+                    <TouchableOpacity activeOpacity={1} onPress={() => {
+                        navigation.goBack(null);
+                    }}>
+                        <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7 }}>
+
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 17, textAlign: 'center', fontWeight: '300', lineHeight: 43.7, color: 'white' }}>个人中心</Text>
+                    <TouchableOpacity activeOpacity={1} onPress={() => {
+                    }}>
+                        <View style={{ justifyContent: 'center', marginRight: 10, alignItems: 'center', height: 43.7, backgroundColor: 'transparent', width: 20 }}>
+                        </View>
+                    </TouchableOpacity>
                 </ImageBackground>
             )
         }
@@ -100,7 +110,7 @@ export default class Me extends Component {
         this.props.navigation.navigate('Web', { url: url });
     }
     pushToAppStore = () => {
-        var url = Platform.OS === 'ios' ? 'https://itunes.apple.com/cn/app/网名大全-海量精品段子大全/id1353739043?mt=8' : 'https://www.pgyer.com/h8vc';
+        var url = Platform.OS === 'ios' ? 'https://itunes.apple.com/cn/app/签名大全-海量精品段子大全/id1353739043?mt=8' : 'https://www.pgyer.com/h8vc';
         Linking.openURL(url)
             .catch((err) => {
                 console.log('An error occurred', err);
@@ -112,10 +122,10 @@ export default class Me extends Component {
             if (isInstalled) {
                 if (type === 'Session') {
                     WeChat.shareToSession({
-                        title: "【网名大全笑话分享】",
+                        title: "【签名分享】",
                         description: '海量搞笑段子、网名、签名、句子分享平台，有什么理由不来开心？',
                         type: 'news',
-                        webpageUrl: Platform.OS === 'ios' ? 'https://itunes.apple.com/cn/app/网名大全-海量精品段子大全/id1353739043?mt=8' : 'https://www.pgyer.com/h8vc',
+                        webpageUrl: Platform.OS === 'ios' ? 'https://itunes.apple.com/cn/app/签名大全-海量精品段子大全/id1353739043?mt=8' : 'https://www.pgyer.com/h8vc',
                         thumbImage: urlConfig.thumbImage,
                     }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((e) => {
                         if (error.message != -2) {
@@ -127,7 +137,7 @@ export default class Me extends Component {
                         title: "海量搞笑段子、网名、签名、句子分享平台，有什么理由不来开心？",
                         description: "海量搞笑段子、网名、签名、句子分享平台，有什么理由不来开心？",
                         type: 'news',
-                        webpageUrl: Platform.OS === 'ios' ? 'https://itunes.apple.com/cn/app/网名大全-海量精品段子大全/id1353739043?mt=8' : 'https://www.pgyer.com/h8vc',
+                        webpageUrl: Platform.OS === 'ios' ? 'https://itunes.apple.com/cn/app/签名大全-海量精品段子大全/id1353739043?mt=8' : 'https://www.pgyer.com/h8vc',
                         thumbImage: urlConfig.thumbImage,
                     }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
                         if (error.message != -2) {
@@ -157,7 +167,7 @@ export default class Me extends Component {
                         overflow: 'hidden'
                     }}>
                         <View style={styles.shareParent}>
-                            {/* <TouchableOpacity
+                            <TouchableOpacity
                                 style={styles.base}
                                 onPress={() => this.clickToShare('Session')}
                             >
@@ -174,7 +184,7 @@ export default class Me extends Component {
                                     <Image style={styles.shareIcon} source={require('../../assets/share_icon_moments.png')} />
                                     <Text style={styles.spinnerTitle}>微信朋友圈</Text>
                                 </View>
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                         </View>
                         <View style={{ height: 10, backgroundColor: '#f5f5f5' }}></View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
@@ -238,7 +248,7 @@ export default class Me extends Component {
                     <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, backgroundColor: 'white', justifyContent: 'space-between' }}>
                         <View style={{ marginLeft: 20, flexDirection: 'row', alignItems: 'center' }}>
                             <IconSimple name="user" size={22} color={Color.FontColor} />
-                            <Text style={{ marginLeft: 10 }}>{this.state.username ? '欢迎您,' + this.state.username : '立即登录网名大全'}</Text>
+                            <Text style={{ marginLeft: 10 }}>{this.state.username ? '欢迎您,' + this.state.username : '立即登录'}</Text>
                         </View>
                         <IconSimple name="arrow-right" size={18} color={Color.FontColor} style={{ marginRight: 20 }} />
                     </View>
@@ -267,18 +277,6 @@ export default class Me extends Component {
                         </TouchableOpacity> */}
                     </View> : <View />}
                 <View style={{ width: WIDTH, height: 10, backgroundColor: Color.f5f5f5 }} />
-                <TouchableOpacity activeOpacity={1} onPress={() => { 
-                    this.props.navigation.navigate('Creat'); 
-                    }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, backgroundColor: 'white', justifyContent: 'space-between' }}>
-                        <View style={{ marginLeft: 20, flexDirection: 'row', alignItems: 'center' }}>
-                            <MaterialIcons name="center-focus-strong" size={25} color={Color.FontColor} />
-                            <Text style={{ marginLeft: 10 }}>生成我的专属网名</Text>
-                        </View>
-                        <IconSimple name="arrow-right" size={18} color={Color.FontColor} style={{ marginRight: 20 }} />
-                    </View>
-                </TouchableOpacity>
-                <View style={{ height: 1, backgroundColor: Color.f5f5f5 }}></View>
                 <TouchableOpacity activeOpacity={1} onPress={() => { this.pushToWeb('yjfk') }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, backgroundColor: 'white', justifyContent: 'space-between' }}>
                         <View style={{ marginLeft: 20, flexDirection: 'row', alignItems: 'center' }}>
@@ -319,7 +317,7 @@ export default class Me extends Component {
 
 }
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#027fff',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88

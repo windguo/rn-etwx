@@ -98,7 +98,7 @@ export  default  class CustomImage extends Component {
                 <AutoHeightImage source={{uri: this.state.url}} width={WIDTH-40}
                        onLoadEnd={this.onLoadEnd} ref={(e)=>{this.imageRef = e}} />
                 {this.state.hiddActivity ? null :  <View style={styles.absoluteView}>
-                    {this.state.showActivity ? <ActivityIndicator color={Color.redColor} size={'large'}/> : <TouchableOpacity activeOpacity={1} onPress={this.changeUrl}><MaterialIcons name="play-circle-outline" size={40} color='#f60'/></TouchableOpacity>}
+                    {this.state.showActivity ? <ActivityIndicator color={Color.redColor} size={'large'}/> : <TouchableOpacity activeOpacity={1} onPress={this.changeUrl}><MaterialIcons name="play-circle-outline" size={40} color='#027fff'/></TouchableOpacity>}
                 </View>}
             </View>
 

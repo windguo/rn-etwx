@@ -23,7 +23,7 @@ export default class LoadingSpinner extends Component {
             )
         }else if(this.props.type==='bottom'){
             return (
-                    <View style={{width:width,height:50,borderRadius:10,backgroundColor:'red',flexDirection:'row',justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{width:width,height:50,borderRadius:10,backgroundColor:'#027fff',flexDirection:'row',justifyContent: 'center', alignItems: 'center'}}>
                         <ActivityIndicator color={this.props.spinnerColor}/>
                         <Text note style={{color: this.props.textColor}}>{this.props.text}</Text>
                     </View>
@@ -71,11 +71,11 @@ const styles = {
         justifyContent:'center',
         alignItems:'center',
         height:50,
-        backgroundColor:'red',
+        backgroundColor:'#027fff',
     },
     statusText:{
         backgroundColor:'transparent',
         fontSize:13,
-        color:'red',
+        color:'#027fff',
     }
 };

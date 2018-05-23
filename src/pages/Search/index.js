@@ -49,7 +49,7 @@ export default class SearchTag extends Component {
     static navigationOptions = {
         tabBarLabel: '搜索',
         tabBarIcon: ({ tintColor, focused }) => (
-            <IconSimple name="user" size={22} color={focused ? "red" : 'black'} />
+            <IconSimple name="user" size={22} color={focused ? '#027fff' : 'black'} />
         ),
         header: ({ navigation }) => {
             let textinput;
@@ -212,7 +212,7 @@ export default class SearchTag extends Component {
 }
 
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#027fff',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88

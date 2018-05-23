@@ -33,32 +33,28 @@ import {
     ImageBackground,
     FlatList,
     AppState,
-    NetInfo,
-    Modal
+    NetInfo
+
 } from 'react-native';
-import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import LoadingSpinner from '../components/pull/LoadingSpinner';
+import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import Button from '../components/Button';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 import {ifIphoneX} from '../utils/iphoneX';
-import Home from './Home';
+import HomeVideo from './HomeVideo';
+import storageKeys from '../utils/storageKeyValue'
 import codePush from 'react-native-code-push'
 import SplashScreen from 'react-native-splash-screen'
-import * as WeChat from 'react-native-wechat';
 import IconSimple from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import urlConfig  from  '../utils/urlConfig';
-import storageKeys from '../utils/storageKeyValue';
-var DeviceInfo = require('react-native-device-info');
-import JPushModule from 'jpush-react-native';
 import HttpUtil from  '../utils/HttpUtil';
-const NativeVersion = DeviceInfo.getVersion();
+
 export  default  class ScrollTabView extends Component {
     static navigationOptions = {
-        tabBarLabel: '读故事',
+        tabBarLabel: '看故事',
         tabBarIcon: ({tintColor,focused}) => (
-            <IconSimple name="list" size={22} color={focused ? "red" : 'black'} />
+            <MaterialIcons name="ondemand-video" size={22} color={focused ? "red":'black'} />
         ),
         header: ({navigation}) => {
             return (
@@ -70,7 +66,7 @@ export  default  class ScrollTabView extends Component {
                             <MaterialIcons name="search" size={25} color='#ffffff' />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color:"#ffffff"}}>儿童文学</Text>
+                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>儿童文学</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
                         navigation.state.routes[0].routes[0].params.rightFuc && navigation.state.routes[0].routes[0].params.rightFuc();
                     }}>
@@ -89,62 +85,40 @@ export  default  class ScrollTabView extends Component {
             page: 0,
             renderLoading:false,
             renderError:false,
-            showModal:false,
         };
-
-    }
-    readUserCache = () => {
-        READ_CACHE(storageKeys.userInfo, (res) => {
-            if (res && res.userid) {
-                GLOBAL.userInfo = res
-                console.log('userInfo',res);
-            } else {
-                console.log('获取用户信息失败');
-            }
-        }, (err) => {
-            console.log('获取用户信息失败');
-        });
 
     }
     CodePushSync = () => {
         codePush.sync(
             {
-                installMode: codePush.InstallMode.ON_NEXT_RESTART,
-                // updateDialog: {
-                //     appendReleaseDescription: true,
-                //     descriptionPrefix: '更新内容:',
-                //     mandatoryContinueButtonLabel: '更新',
-                //     mandatoryUpdateMessage: '有新版本了，请您及时更新',
-                //     optionalInstallButtonLabel: '立即更新',
-                //     optionalIgnoreButtonLabel: '稍后',
-                //     optionalUpdateMessage: '有新版本了，是否更新?',
-                //     title: '提示'
-                // },
+                installMode: codePush.InstallMode.IMMEDIATE,
+                updateDialog: {
+                    appendReleaseDescription: true,
+                    descriptionPrefix: '更新内容:',
+                    mandatoryContinueButtonLabel: '更新',
+                    mandatoryUpdateMessage: '有新版本了，请您及时更新',
+                    optionalInstallButtonLabel: '立即更新',
+                    optionalIgnoreButtonLabel: '稍后',
+                    optionalUpdateMessage: '有新版本了，是否更新?',
+                    title: '提示'
+                },
             },
             this.codePushStatusDidChange.bind(this),
             this.codePushDownloadDidProgress.bind(this)
         );
     }
     componentWillMount() {
-        this.updateConfig = {
-            ios:{isForce:false,downloadUrl:''},
-            android:{isForce:false,downloadUrl:''},
-            message:''
-        },
         //监听状态改变事件
         AppState.addEventListener('change', this.handleAppStateChange);
         NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
-
     }
     componentDidMount() {
-        this.InitJPush();
-        this.readUserCache();
         if (Platform.OS === 'android'){
             NativeModules.NativeUtil.StatusBar();
         }
         SplashScreen.hide();
         this.CodePushSync();
-        WeChat.registerApp('wx668fbd69c9f15c8b');
+       // WeChat.registerApp('wxd750cac4fb66b983');
         this.props.navigation.setParams({
             rightFuc: () => {
                 let url = '';
@@ -158,58 +132,21 @@ export  default  class ScrollTabView extends Component {
                 }else{
                     this.props.navigation.navigate('Login');
                 }
+
             },
             leftFuc: () => {
                 this.props.navigation.navigate('SearchTag');
-                // DeviceEventEmitter.emit('reloadData')
             }
         });
         InteractionManager.runAfterInteractions(() => {
             this.loadData();
-            this.checkAppUpdateMessage();
             this.setState({renderLoading:true});
         });
-
-
     }
-
-    //这里执行要跳转的页面
-    jumpToOther = ()=>{
-        console.log('JPushModule jump to SecondActivity')
-       //  this.props.navigation.navigate('Test')
-    }
-
-    InitJPush=()=>{
-        if (Platform.OS === 'android') {
-            JPushModule.initPush();
-            JPushModule.getInfo(map => {
-                this.setState({
-                    appkey: map.myAppKey,
-                    imei: map.myImei,
-                    package: map.myPackageName,
-                    deviceId: map.myDeviceId,
-                    version: map.myVersion
-                })
-            })
-            JPushModule.notifyJSDidLoad(resultCode => {
-                if (resultCode === 0) {
-                }
-            })
-        }
-
-        if (Platform.OS === 'ios') {
-            JPushModule.setupPush();
-            JPushModule.setBadge(0, success => {})
-        }
-    }
-
     componentWillUnmount() {
         //删除状态改变事件监听
         AppState.removeEventListener('change');
         NetInfo.removeEventListener('connectionChange');
-        // JPushModule.removeReceiveCustomMsgListener();
-        // JPushModule.removeReceiveNotificationListener();
-        // JPushModule.clearAllNotifications()
 
     }
     handleAppStateChange = (appState) => {
@@ -220,7 +157,6 @@ export  default  class ScrollTabView extends Component {
         }
     }
     handleConnectivityChange = (status) =>{
-        console.log('status change:' , status);
         if (status.type !== 'none'){
             this.loadData();
             this.setState({renderLoading:true});
@@ -257,91 +193,30 @@ export  default  class ScrollTabView extends Component {
                 break;
         }
     }
-   clickDownload = ()=> {
-        let url = '';
-        if (Platform.OS === 'ios'){
-            url = this.updateConfig.ios.downloadUrl;
-            // if (!this.updateConfig.ios.flag){
-            //     this.setState({showModal:false});
-            // }
-        }else{
-            url = this.updateConfig.android.downloadUrl;
-            // if (!this.updateConfig.android.flag){
-            //     this.setState({showModal:false});
-            // }
-        }
-       Linking.openURL(url)
-           .catch((err)=>{
-               console.log('An error occurred', err);
-           });
-   }
-   clickToCancelModal = () => {
-        this.setState({showModal:false})
-   }
-    compareVersionNumber = (ServerPram,LocalPram) => {
-        let v1g = ServerPram.split(".");
-        let v2g = LocalPram.split(".");
-        let flag = false;
-        for (var i=0;i<3;i++) {
-            if (parseInt(v1g[i]) > parseInt(v2g[i]))  {
-                flag = true;
-                break;
-            }
-        }
-        return flag;
-    }
-    checkAppUpdateMessage = async() => {
-        let url = urlConfig.CheckUpdate;
-        let res =  await  HttpUtil.GET(url);
-        if(!res||!res.result){
-            return;
-        }
-        let result = res.result ? res.result:[];
-        try {
-            let [message, android, ios] = result;
-            console.log('xxxxx',message,android,ios);
-            if (Platform.OS === 'android') {
-                let compRes = this.compareVersionNumber(android.android, NativeVersion);
-                this.updateConfig.android = android;
-                this.updateConfig.message = message.updateInfo;
-                if (compRes){
-                    this.setState({showModal:true});
-                }
-            } else if (Platform.OS === 'ios') {
-                let compRes = this.compareVersionNumber(ios.ios, NativeVersion);
-                this.updateConfig.ios = ios;
-                this.updateConfig.message = message.updateInfo;
-                if (compRes){
-                    this.setState({showModal:true});
-                }
-            } else {
-            }
-        }catch (err){}
-    }
 
     loadData = async()=>{
-    let url = urlConfig.sectionList;
-    console.log('sectionList',url);
-    let res = await HttpUtil.GET(url);
-    if(!res||!res.result){
+        let url = urlConfig.sectionListVideo;
+        console.log('sectionList',url);
+        let res = await HttpUtil.GET(url);
+        if(!res||!res.result){
+            this.setState({renderLoading:false});
+            this.setState({renderError:true});
+            READ_CACHE(storageKeys.sectionList, (res) => {
+                if (res && res.length > 0) {
+                    this.setState({sectionList: res});
+                } else {
+                }
+            }, (err) => {
+            });
+            return;
+        }
         this.setState({renderLoading:false});
-        this.setState({renderError:true});
-        READ_CACHE(storageKeys.sectionList, (res) => {
-            if (res && res.length > 0) {
-                this.setState({sectionList: res});
-            } else {
-            }
-        }, (err) => {
-        });
-        return;
-    }
-    this.setState({renderLoading:false});
-    this.setState({renderError:false});
-    let result = res.result ? res.result:[];
-    WRITE_CACHE(storageKeys.sectionList, result);
-    this.setState({sectionList: result});
-    console.log('res', res);
-};
+        this.setState({renderError:false});
+        let result = res.result ? res.result:[];
+        this.setState({sectionList: result});
+        WRITE_CACHE(storageKeys.sectionList, result);
+        console.log('res', res);
+    };
         renderTab = (tabs) => {
             let array = [];
             array.push(tabs.map((item) => {
@@ -357,8 +232,8 @@ export  default  class ScrollTabView extends Component {
                 }
             })
 
-            return <ScrollableTabBar activeTextColor='#d25974' underlineStyle={{ height: 0, width: 0 }}
-                backgroundColor='#fff' textStyle={{fontSize: 16, fontWeight:'100'}}
+            return <ScrollableTabBar activeTextColor='#d25974' underlineStyle={{height: 0,width:0}}
+                                     backgroundColor='white' textStyle={{fontSize: 16, fontWeight:'100'}}
                                      tabStyle={{paddingLeft: 10, paddingRight: 10}} />;
         }
         pageNumber = (number) => {
@@ -373,20 +248,20 @@ export  default  class ScrollTabView extends Component {
         renderContent = (sectionList) => {
             let list = [];
             list.push(sectionList.map((data, index) => {
-                return <Home tabLabel={data.classname} data={data} {...this.props} pageNumber={(number) => {
+                return <HomeVideo tabLabel={data.classname} data={data} {...this.props} pageNumber={(number) => {
                     this.pageNumber(number)
                 }} index={index}/>
             }));
             return list;
         }
-    _renderError = (params)=>{
+    _renderError = ()=>{
         return (
             <View style={[styles.contain,{justifyContent:'center',alignItems:'center'}]}>
                 {Platform.OS === 'ios' ? <StatusBar barStyle="light-content"/> : null}
                 <TouchableOpacity onPress={()=>this.loadData()}>
                     <View style={{justifyContent:'center', alignItems:'center'}}>
                         <Image style={{width:SCALE(323),height:SCALE(271)}} source={require('../assets/nonetwork.png')}/>
-                        <Text style={{fontSize:FONT(15),color:Color.C666666}}>{params ? params : '网络无法连接，点击屏幕重试'}</Text>
+                        <Text style={{fontSize:FONT(15),color:Color.C666666}}>网络无法连接，点击屏幕重试</Text>
                     </View>
                 </TouchableOpacity>
             </View>)
@@ -396,15 +271,13 @@ export  default  class ScrollTabView extends Component {
             {Platform.OS === 'ios' ? <StatusBar barStyle="light-content"/> : null}
             <LoadingSpinner type="normal"/></View>)
     };
+
     render() {
         if (this.state.renderLoading) {
             return this._renderLoading();
         } else if (this.state.renderError) {
             return this._renderError();
         } else {
-            if(this.state.sectionList.length<1){
-                return this._renderError("暂无数据点击请求");
-            }
             return (
                 <View style={{flex: 1}}>
                     {Platform.OS === 'ios' ? <StatusBar barStyle="light-content"/> : null}
@@ -412,14 +285,12 @@ export  default  class ScrollTabView extends Component {
                         {this.renderContent(this.state.sectionList)}
                     </ScrollableTabView>
                 </View>
-
             );
         }
     }
-
-}
+    }
     const header = {
-        backgroundColor: '#eee',
+        backgroundColor: '#C7272F',
         ...ifIphoneX({
             paddingTop: 44,
             height: 88
@@ -431,7 +302,6 @@ export  default  class ScrollTabView extends Component {
         justifyContent: 'space-between',
         alignItems:'flex-end'
     }
-
 const styles = StyleSheet.create({
     contain:{
         flex:1,
@@ -446,28 +316,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderTopWidth: 1,
         borderColor: "#CED0CE"
-    },
-    modalViewStyle:{
-        flex:1,
-        position:"absolute",
-        top:0,
-        left:0,
-        right:0,
-        bottom:0,
-        backgroundColor:'#0000007F',
-        justifyContent:'center',
-        alignItems:'center',
-
-    },
-    hudViewStyle: {
-        width:250,
-        maxHeight:300,
-        backgroundColor:'white',
-        justifyContent:'space-between',
-        borderRadius:10
-    },
-
-
+    }
 });
 
 

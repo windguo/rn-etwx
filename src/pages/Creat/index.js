@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+/**
+ * Created by zhangzuohua on 2017/10/19.
+ */
+import React from 'react';
 import {
     StyleSheet,
     Image,
@@ -8,197 +11,197 @@ import {
     Dimensions,
     Animated,
     Easing,
+    ScrollView,
     PanResponder,
-    Platform,
     ActivityIndicator,
     TouchableOpacity,
     StatusBar,
-    InteractionManager,
-    BackHandler,
-    ScrollView,
-    TouchableWithoutFeedback,
-    RefreshControl,
-    DeviceEventEmitter,
-    LayoutAnimation,
+    Platform,
     NativeModules,
     ImageBackground,
-    FlatList,
-    WebView,
+    InteractionManager,
+    TouchableHighlight,
     TextInput,
+    Modal,
+    DeviceEventEmitter
 } from 'react-native';
-import _fetch from '../../utils/_fetch'
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
-import { ifIphoneX } from '../../utils/iphoneX';
+import { NavigationActions } from 'react-navigation'
 import IconSimple from 'react-native-vector-icons/SimpleLineIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/Feather';
 import urlConfig from '../../utils/urlConfig';
-import PureModalUtil from '../../utils/PureModalUtil';
-import * as WeChat from 'react-native-wechat';
-import storageKeys from '../../utils/storageKeyValue'
-import ScrollTabView from "../ScrollTabView";
-import PullList from '../../components/pull/PullList'
-import ModalUtil from '../../utils/modalUtil';
-import HttpUtil from "../../utils/HttpUtil";
-import formatData from "../../utils/formatData";
-import LoadingView from "../../components/LoadingView";
-export default class SearchTag extends Component {
+import Toast from 'react-native-root-toast';
+import storageKeys from '../../utils/storageKeyValue';
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { ifIphoneX } from '../../utils/iphoneX';
+import HttpUtil from '../../utils/HttpUtil';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-    static key = "";
+export default class Login extends React.Component {
     static navigationOptions = {
-        tabBarLabel: '网名生成器',
+        tabBarLabel: '签名设计',
         tabBarIcon: ({ tintColor, focused }) => (
-            <IconSimple name="user" size={22} color={focused ? "red" : 'black'} />
+            <IconSimple name="pencil" size={22} color={focused ? '#027fff' : 'black'} />
         ),
         header: ({ navigation }) => {
-            let textinput;
             return (
                 <ImageBackground style={{ ...header }} source={require('../../assets/backgroundImageHeader.png')} resizeMode='cover'>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
                         navigation.goBack(null);
                     }}>
                         <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7 }}>
-                            <IconSimple name="arrow-left" size={20} color='white' />
+                            
                         </View>
                     </TouchableOpacity>
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center', 
-                        height: 43.7
+                    <Text style={{ fontSize: 17, textAlign: 'center', fontWeight: '300', lineHeight: 43.7, color: 'white' }}>签名设计</Text>
+                    <TouchableOpacity activeOpacity={1} onPress={() => {
                     }}>
-                        <TextInput
-                            ref = {(text)=>{textinput = text}}
-                            placeholder='请输入您的姓名'
-                            placeholderTextColor='#555555'
-                            autoFocus={true}
-                            onChangeText={(keywords) => {
-                                SearchTag.key = keywords;
-                                navigation.state.routes[navigation.state.routes.length-1].params && navigation.state.routes[navigation.state.routes.length-1].params.changeText(SearchTag.key)
-                                console.log("navigation",navigation)
-                            }}
-                            defaultValue={navigation.state.routes[navigation.state.routes.length-1].params && navigation.state.routes[navigation.state.routes.length-1].params.key}
-                            style={{ 
-                                fontSize: 16,
-                                color: '#555555',
-                                borderRadius: 10,
-                                marginHorizontal: 20, 
-                                width: WIDTH - 140,
-                                height: 32,
-                                paddingHorizontal: 10,
-                                paddingTop:0,
-                                paddingBottom:0,
-                                backgroundColor: '#ffffff'
-                            }}
-                            underlineColorAndroid="transparent">
-                        </TextInput>
-                        <View style={{
-                            position:'absolute',
-                            right:navigation.state.routes[navigation.state.routes.length-1].params
-                            && navigation.state.routes[navigation.state.routes.length-1].params.changetext
-                            && navigation.state.routes[navigation.state.routes.length-1].params.changetext.length>0?110:1000}}>
-                            <TouchableOpacity activeOpacity={0.8} onPress={
-                                ()=>{
-                                    SearchTag.key = "";
-                                    textinput&&textinput.clear();
-                                    navigation.state.routes[navigation.state.routes.length-1].params && navigation.state.routes[navigation.state.routes.length-1].params.changeText(SearchTag.key)
-
-                                }
-                            }>
-                                <IconSimple name="close" size={22}/>
-                            </TouchableOpacity>
+                        <View style={{ justifyContent: 'center', marginRight: 10, alignItems: 'center', height: 43.7, backgroundColor: 'transparent', width: 20 }}>
                         </View>
-
-                        <TouchableOpacity style={{}} activeOpacity={0.7} onPress={() => {
-                            console.log("header navigation",navigation)
-                            console.log("SearchTag.key",SearchTag.key);
-                            navigation.state.routes[navigation.state.routes.length-1].params && navigation.state.routes[navigation.state.routes.length-1].params.searchKey(SearchTag.key);
-                            }}>
-                            <View>
-                                <Text style={{color: '#ffffff',fontWeight:'300',fontSize:16,marginRight:10}}>生成网名</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 </ImageBackground>
             )
         }
+
     };
     constructor(props) {
         super(props);
         this.state = {
-            tag:[],
-            visible:false
-        };
+            inputName: '',
+            visble: false,
+        }
     }
-    componentWillMount() {
-        this._ViewHeight = new Animated.Value(0);
+    componentWillUnmount() {
     }
     componentDidMount() {
-        this.props.navigation.setParams({
-            searchKey:this.searchKey,
-            changeText:this.changeText
-        });
     }
-
-
-    //点击搜索
-    searchKey = (keyword)=>{
-        // console.log("navigation",this.props.navigation);
-        this.props.navigation.setParams({ key: keyword,changetext:keyword });
-        this.props.navigation.navigate("CreatTag",{key:keyword});
+    disMissPress = () => {
+        this.props.navigation.goBack(null);
     }
-
-    //监听输入改变 是否显示取消按钮
-    changeText = (text)=>{
-        this.props.navigation.setParams({
-            changetext:text
-        })
+    inputNameInputTextChange = (text) => {
+        this.setState({ inputName: text });
     }
-
-
-    renderTag = () => {
-        let tags = [];
-        for (let i = 0; i < this.state.tag.length; i++) {
-            tags.push(
-                <TouchableOpacity key={i}
-                                  activeOpacity={0.8}
-                                  onPress={() => this.searchKey(this.state.tag[i].name)}>
-                    <View style={{
-                        width: 70, height: 40, backgroundColor: 'white', justifyContent: 'center',
-                        alignItems: 'center', borderRadius: 20, marginBottom: 20, marginRight: 10
-                    }}>
-                        <Text style={{fontSize: 16}}>{this.state.tag[i].name}</Text>
-                    </View>
-                </TouchableOpacity>)
+    loginButtonPress = () => {
+        console.log("texttexttexttexttexttexttexttexttexttext---" + this.state.inputName);
+        if (this.state.inputName != '') {
+            this.login();
+        } else {
+            alert('请输入您的姓名（2-4个汉字）');
         }
-        return tags;
+    };
+    login = async (resolve) => {
+        this.props.navigation.navigate('CreatTag', { data: this.state.inputName });
     }
-
+    // <ScrollView  style={{ backgroundColor:'#eeeeee', width: WIDTH,flex:1}} contentContainerStyle={{alignItems:'center'}}>
+    // </ScrollView>
     render() {
-        if(this.state.tag.length>0){
-            return (
-                <ScrollView
-                    style={{flex:1}}
-                    contentContainerStyle={{flex: 1,marginLeft:10,marginTop:20,flexDirection:'row', flexWrap:'wrap',justifyContent:'center'}} >
-                    {/* {this.renderTag()} */}
+        return (
+            <KeyboardAwareScrollView
+                enableOnAndroid={false}>
+                <ScrollView style={{ backgroundColor: '#eeeeee', width: WIDTH, flex: 1 }} contentContainerStyle={{ alignItems: 'center' }}>
+                    <View style={{ marginTop: HEIGHT * 0.1, width: WIDTH, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <TextInput
+                            numberOfLines={1}
+                            placeholder='请输入您的姓名'
+                            autoFocus={true}
+                            placeholderTextColor='#555555'
+                            style={{ width: WIDTH - 80, fontSize: 16, color: '#555555', height: 50, backgroundColor: '#ffffff', borderRadius: 10, marginHorizontal: 40, paddingHorizontal: 20 }}
+                            onChangeText={this.inputNameInputTextChange}
+                            // value="郭延峰" 
+                            value={this.state.inputName} 
+                            underlineColorAndroid="transparent"></TextInput>
+                    </View>
+                    <TouchableOpacity style={{
+                        width: WIDTH,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: 40,
+                    }} activeOpacity={0.7} 
+                        onPress={this.loginButtonPress}
+                        >
+                        <View style={{
+                            width: WIDTH - 80,
+                            borderRadius: 10,
+                            height: 50,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#027fff'
+                        }}>
+                            <Text style={{ fontSize: FONT(18), paddingTop: 10, paddingBottom: 10, backgroundColor: 'transparent', color: 'white', textAlign: 'center' }}>立即设计</Text>
+                        </View>
+                    </TouchableOpacity>
+
                 </ScrollView>
-            );
-        }
-
-
-        return  <View style={{width:"100%",height:"100%", justifyContent:'center', alignItems:"center"}}>
-            {/* <LoadingView visible={true}/> */}
-        </View>
-
-
-
+            </KeyboardAwareScrollView>)
+    }
+}
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingTop: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    line1: {
+        height: StyleSheet.hairlineWidth,
+        width: WIDTH - SCALE(40) - SCALE(50),
+        marginLeft: SCALE(40),
+        backgroundColor: Color.bebebe,
+        marginRight: SCALE(50)
+    },
+    line2: {
+        height: StyleSheet.hairlineWidth,
+        width: WIDTH - SCALE(40) - SCALE(50),
+        marginLeft: SCALE(40),
+        backgroundColor: Color.bebebe,
+        marginRight: SCALE(50)
+    },
+    load_box: {
+        width: 100,
+        height: 100,
+        backgroundColor: '#0008',
+        alignItems: 'center',
+        marginLeft: SCREEN_WIDTH / 2 - 50,
+        marginTop: SCREEN_HEIGHT / 2 - 50,
+        borderRadius: 10
+    },
+    load_progress: {
+        position: 'absolute',
+        width: 100,
+        height: 90
+    },
+    load_text: {
+        marginTop: 70,
+        color: '#FFF',
+    },
+    container: {
+        flex: 1,
+        paddingTop: 30,
+        alignItems: 'center'
+    },
+    image: {
+        borderWidth: 1,
+        width: 300,
+        height: 100,
+        borderRadius: 5,
+        borderColor: '#ccc'
+    },
+    img: {
+        height: 98,
+        width: 300,
+    },
+    saveImg: {
+        height: 30,
+        padding: 6,
+        textAlign: 'center',
+        backgroundColor: '#3BC1FF',
+        color: '#FFF',
+        marginTop: 10,
     }
 
-}
-
+});
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#027fff',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88
@@ -210,55 +213,4 @@ const header = {
     justifyContent: 'space-between',
     alignItems: 'flex-end'
 }
-
-const styles = StyleSheet.create({
-    base: {
-        flex: 1
-    },
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#FFF'
-    },
-    spinner: {
-        width: WIDTH,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.65)'
-    },
-    spinnerContent: {
-        justifyContent: 'center',
-        width: WIDTH,
-        backgroundColor: '#fcfcfc',
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-    },
-    spinnerTitle: {
-        fontSize: 14,
-        color: '#313131',
-        textAlign: 'center',
-        marginTop: 5
-    },
-    shareParent: {
-        flexDirection: 'row',
-        marginTop: 10,
-        marginBottom: 10
-    },
-    shareContent: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    shareIcon: {
-        width: 40,
-        height: 40
-    },
-});
-
-
-
-
 

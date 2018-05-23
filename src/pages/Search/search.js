@@ -54,7 +54,7 @@ export default class Search extends Component {
     static navigationOptions = {
         tabBarLabel: '搜索',
         tabBarIcon: ({ tintColor, focused }) => (
-            <IconSimple name="user" size={22} color={focused ? "red" : 'black'} />
+            <IconSimple name="user" size={22} color={focused ? '#027fff' : 'black'} />
         ),
         header: ({ navigation }) => {
             let textinput;
@@ -223,7 +223,7 @@ export default class Search extends Component {
                 if (isInstalled) {
                     if (data.wechat === 1) {
                         WeChat.shareToSession({
-                            title: "【网名分享】",
+                            title: "【签名分享】",
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -235,7 +235,7 @@ export default class Search extends Component {
                         });
                     } else if(data.wechat === 2){
                         WeChat.shareToTimeline({
-                            title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
+                            title: "【签名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -264,7 +264,7 @@ export default class Search extends Component {
             if (isInstalled) {
                 if (type === 'Session') {
                     WeChat.shareToSession({
-                        title: "【网名分享】",
+                        title: "【签名分享】",
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -274,7 +274,7 @@ export default class Search extends Component {
                     }});
                 } else {
                     WeChat.shareToTimeline({
-                        title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
+                        title: "【签名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -304,7 +304,7 @@ export default class Search extends Component {
                         bottom:0,
                         overflow:'hidden'}}>
                         <View style={styles.shareParent}>
-                            {/* <TouchableOpacity
+                            <TouchableOpacity
                                 style={styles.base}
                                 onPress={()=>this.clickToShare('Session')}
                             >
@@ -321,7 +321,7 @@ export default class Search extends Component {
                                     <Image style={styles.shareIcon} source={require('../../assets/share_icon_moments.png')} />
                                     <Text style={styles.spinnerTitle}>微信朋友圈</Text>
                                 </View>
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.base}
                                 onPress={()=>this.clickToReport()}
@@ -404,7 +404,7 @@ export default class Search extends Component {
             let DeepCopyData = [].concat(JSON.parse(JSON.stringify(this.FlatListData)));
             DeepCopyData[index].isCopyed = true;
             this.flatList.setData(DeepCopyData);
-            Clipboard.setString(item.title);
+            Clipboard.setString(item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/,"") + urlConfig.DetailUrl + item.classid + '/' + item.id);
             Toast.show('复制成功', {
                 duration: Toast.durations.SHORT,
                 position: Toast.positions.CENTER,
@@ -544,7 +544,7 @@ export default class Search extends Component {
                                     color: '#666666',
                                     fontWeight: '100'
                                 }}>
-                                    {formatData(parseInt(item.newstime))}
+                                    
                                 </Text>
                             </View>
                         </View>
@@ -579,13 +579,13 @@ export default class Search extends Component {
                             <View style={{flexDirection: 'row'}}>
                                 <View style={{flexDirection: 'row',marginLeft: 10}}>
                                     <TouchableOpacity activeOpacity={1} onPress={()=>{this.PostThumb(item,1,index)}} hitSlop={{left:10,right:10,top:10,bottom:10}}>
-                                        {item.isLike ?   <IconSimple name="like" size={15} color='red'/> : <IconSimple name="like" size={15} color='#5C5C5C'/>}
+                                        {item.isLike ?   <IconSimple name="like" size={15} color='#027fff'/> : <IconSimple name="like" size={15} color='#5C5C5C'/>}
                                     </TouchableOpacity>
                                     <Text style={{marginLeft: 5,fontWeight:'100'}}>{item.diggtop && item.diggtop}</Text>
                                 </View>
                                 <View style={{flexDirection: 'row', marginLeft: 10}}>
                                     <TouchableOpacity activeOpacity={1} onPress={()=>{this.PostThumb(item,0,index)}} hitSlop={{left:10,right:10,top:10,bottom:10}}>
-                                        {item.isUnLike ?   <IconSimple name="dislike" size={15} color='red'/> : <IconSimple name="dislike" size={15} color='#5C5C5C'/>}
+                                        {item.isUnLike ?   <IconSimple name="dislike" size={15} color='#027fff'/> : <IconSimple name="dislike" size={15} color='#5C5C5C'/>}
                                     </TouchableOpacity>
                                     <Text style={{marginLeft: 5,fontWeight:'100'}}>{item.diggbot && item.diggbot}</Text>
                                 </View>
@@ -629,7 +629,7 @@ export default class Search extends Component {
 
 }
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#027fff',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88

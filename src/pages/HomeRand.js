@@ -102,9 +102,9 @@ export default class Home extends Component {
                 if (isInstalled) {
                     if (data.wechat === 1) {
                         WeChat.shareToSession({
-                            title: "【网名分享】",
-                            description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                            type: 'text',
+                            title: "【儿童文学分享】",
+                            description: this._shareItem && this._shareItem.smalltext.replace(/^(\r\n)|(\n)|(\r)/,""),
+                            type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
                             thumbImage: urlConfig.thumbImage,
                         }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
@@ -114,9 +114,9 @@ export default class Home extends Component {
                         });
                     } else{
                         WeChat.shareToTimeline({
-                            title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                            description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                            type: 'text',
+                            title: "【儿童文学分享】" + this._shareItem && this._shareItem.smalltext.replace(/^(\r\n)|(\n)|(\r)/,""),
+                            description: this._shareItem && this._shareItem.smalltext.replace(/^(\r\n)|(\n)|(\r)/,""),
+                            type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
                             thumbImage: urlConfig.thumbImage,
                         }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
@@ -147,15 +147,23 @@ export default class Home extends Component {
             this.props.navigation.navigate('Login');
         }
     }
+    pushToUrls = (url) => {
+        if (url) {
+            Linking.openURL(url)
+                .catch((err) => {
+                    console.log('An error occurred', err);
+                });
+        }
+    }
     clickToShare = (type) => {
         this.close();
         WeChat.isWXAppInstalled().then((isInstalled) => {
             if (isInstalled) {
                 if (type === 'Session') {
                     WeChat.shareToSession({
-                        title: "【网名分享】",
-                        description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                        type: 'text',
+                        title: "【儿童文学分享】",
+                        description: this._shareItem && this._shareItem.smalltext.replace(/^(\r\n)|(\n)|(\r)/,""),
+                        type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
                         thumbImage: urlConfig.thumbImage,
                     }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((e)=>{if (error.message != -2) {
@@ -164,9 +172,9 @@ export default class Home extends Component {
 
                 } else {
                     WeChat.shareToTimeline({
-                        title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                        description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                        type: 'text',
+                        title: "【儿童文学分享】" + this._shareItem && this._shareItem.smalltext.replace(/^(\r\n)|(\n)|(\r)/,""),
+                        description: this._shareItem && this._shareItem.smalltext.replace(/^(\r\n)|(\n)|(\r)/,""),
+                        type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
                         thumbImage: urlConfig.thumbImage,
                     }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
@@ -363,7 +371,7 @@ export default class Home extends Component {
             let formData = new FormData();
             formData.append("id", item.id);
             formData.append("classid", item.classid);
-            formData.append("dotop", '' + dotop);
+            formDatas
             formData.append("doajax", '' + 1);
             formData.append("ajaxarea", "diggnum");
             let res = await HttpUtil.POST(url,formData,'dotop');
@@ -384,27 +392,32 @@ export default class Home extends Component {
             this.ToastShow(message);
         }catch (e){}
     }
+    
     renderTextAndImage = (item, index) => {
         return <View>
-            <Text style={{
-                fontSize: 18,
-                lineHeight: 26,
-                color: item.isCopyed ? '#666666' : 'black',
-                paddingBottom: 15,
-                fontWeight: '300'
-            }} onPress={() => { this.setClipboardContent(item.title && item.title, index, item) }}>
-                {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}{'\n'}
-                {item.ftitle && item.ftitle.replace(/^(\r\n)|(\n)|(\r)/, "")}
-            </Text>
-        </View>
-    }
-    _renderItem = ({ item, index }) => {
-        if (item.adType && item.picUrl) {
-            return <TouchableOpacity activeOpacity={1} onPress={() => {
-            }}>
-                <View style={{ backgroundColor: '#ffffff', flexDirection: 'row', paddingHorizontal: 20, paddingVertical: 15, justifyContent: 'center', alignItems: 'center' }}>
-                    {item.picUrl ? <ImageProgress
-                        source={{ uri: item.picUrl }}
+            <View>
+                <Text activeOpacity={0.8} onPress={() => {
+                    this.props.navigation.navigate(
+                        'Mp3Detail', { 
+                            id: item.id,
+                            title: item.title,
+                            titlepic: item.titlepic,
+                            mp3_url:item.mp3_url 
+                        });
+                }} style={{ fontSize: 18, paddingBottom: 10 }}>{item.title}</Text>
+            </View>
+            <View style={{ paddingTop: 10, paddingBottom: 10}}>
+                <Text activeOpacity={0.8} onPress={() => {
+                    this.props.navigation.navigate(
+                        'Mp3Detail', {
+                            id: item.id,
+                            title: item.title,
+                            titlepic: item.titlepic,
+                            mp3_url: item.mp3_url
+                        });
+                }} >
+                    {item.titlepic ? <ImageProgress
+                        source={{ uri: item.titlepic }}
                         resizeMode={'cover'}
                         indicator={Pie}
                         indicatorProps={{
@@ -414,53 +427,17 @@ export default class Home extends Component {
                             unfilledColor: 'rgba(200, 200, 200, 0.1)'
                         }}
                         style={{ width: WIDTH - 40, height: 100 }} /> : null}
-                </View>
-            </TouchableOpacity>
-        }
+                </Text>
+            </View>
+        </View>
+    }
+    _renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity activeOpacity={1} onPress={() => {
+                this.pushToUrls(item.goUrl)
             }}>
                 <View>
-                    {index === 0 ? <View style={{ width: WIDTH, height: 10, backgroundColor: Color.f5f5f5 }} /> : <View />}
-                    <View style={{ backgroundColor: '#ffffff', flexDirection: 'row', paddingHorizontal: 20, paddingTop: 15, justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: '#666666', fontWeight: '100' }} onPress={() => {
-                                this.props.navigation.navigate('User', {
-                                    username: item.username,
-                                    userid: item.userid
-                                });
-                            }}>
-                                ^
-                                <Text>
-                                    {item.username}
-                                </Text>
-                                ^
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            {(this.props.data.classid === '0' || this.props.data.classid === '1') ? <View style={{ flexDirection: 'row' }}>
-                                <Text style={{
-                                    marginLeft: 10,
-                                    paddingVertical: 2,
-                                    color: '#666666',
-                                    fontWeight: '100'
-                                }}>
-                                    {formatData(parseInt(item.newstime))}
-                                </Text>
-                            </View> :
-                                <View>
-                                    <Text style={{
-                                        paddingVertical: 2,
-                                        color: '#666666',
-                                        fontWeight: '100'
-                                    }}>
-                                        {formatData(parseInt(item.newstime))}
-                                    </Text>
-                                </View>
-                            }
-                        </View>
-                    </View>
-                    <View style={{ backgroundColor: 'white', paddingHorizontal: 20}}>
+                    <View style={{ backgroundColor: 'white',marginTop:2, paddingHorizontal: 20, paddingTop: 20 }}>
                         {this.renderTextAndImage(item, index)}
                         <View
                             style={{
@@ -469,33 +446,30 @@ export default class Home extends Component {
                                 justifyContent: 'space-between',
                             }}>
                             <View style={{ flexDirection: 'row' }}>
-                                {item.classname ? <Text style={{
-                                    paddingHorizontal: 6,
-                                    paddingVertical: 2,
-                                    borderWidth: 1,
-                                    borderRadius: 10,
-                                    paddingLeft:10,
-                                    paddingRight:10,
-                                    fontWeight: '100',
-                                    borderColor: '#eee'
-                                }}
+                                <TouchableOpacity activeOpacity={1}
                                     onPress={() => {
-                                        this.props.pageNumber(parseInt(item.classid))
-                                    }}>
-                                    {item.classname && item.classname}
-                                </Text> : <View />}
-
+                                        this.props.navigation.navigate(
+                                            'Mp3Detail', {
+                                                id: item.id,
+                                                title: item.title,
+                                                titlepic: item.titlepic,
+                                                mp3_url: item.mp3_url
+                                            });
+                                    }}
+                                    hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
+                                    <Text style={{ color: '#ff5923' }}>立即收听 >></Text>
+                                </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row', marginLeft: 10 }}>
                                     <TouchableOpacity activeOpacity={1} onPress={() => { this.PostThumb(item, 1, index) }} hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
-                                        {item.isLike ? <IconSimple name="like" size={15} color='red' /> : <IconSimple name="like" size={15} color='#888' />}
+                                        {item.isLike ? <IconSimple name="like" size={15} color='#027fff' /> : <IconSimple name="like" size={15} color='#888' />}
                                     </TouchableOpacity>
                                     <Text style={{ marginLeft: 5, color: '#999', fontWeight: '100' }}>{item.diggtop && item.diggtop}</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', marginLeft: 10 }}>
                                     <TouchableOpacity activeOpacity={1} onPress={() => { this.PostThumb(item, 0, index) }} hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
-                                        {item.isUnLike ? <IconSimple name="dislike" size={15} color='red' /> : <IconSimple name="dislike" size={15} color='#888' />}
+                                        {item.isUnLike ? <IconSimple name="dislike" size={15} color='#027fff' /> : <IconSimple name="dislike" size={15} color='#888' />}
                                     </TouchableOpacity>
                                     <Text style={{ marginLeft: 5, color: '#999', fontWeight: '100' }}>{item.diggbot && item.diggbot}</Text>
                                 </View>
@@ -511,18 +485,6 @@ export default class Home extends Component {
             </TouchableOpacity>
         )
     }
-
-// <PullList
-// type = "wait"
-// style={{height:HEIGHT-SCALE(94)}}
-// ref={(list)=> this.ultimateListView = list}
-// onPullRelease={this.onPullRelease}
-// onEndReached={this.loadMore}
-// renderItem={this.renderRowView}
-// numColumns={1}
-// initialNumToRender={5}
-// key={'list'}
-// />
     onPullRelease = async (resolve) => {
         this.loadData(resolve);
     };
@@ -564,7 +526,7 @@ export default class Home extends Component {
                     onPullRelease={this.onPullRelease}
                     renderItem={this._renderItem}
                     onEndReached={this.loadMore}
-                    style={{backgroundColor: Color.f5f5f5}}
+                    style={{backgroundColor: '#eee'}}
                     ref={(c) => {this.flatList = c}}
                     ifRenderFooter={true}
                 />

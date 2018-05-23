@@ -24,6 +24,7 @@ import {
     ImageBackground,
     FlatList,
     WebView,
+    CameraRoll,
     TextInput, Clipboard,
 } from 'react-native';
 import _fetch from '../../utils/_fetch'
@@ -48,14 +49,10 @@ import {Pie,Bar,Circle,CircleSnail} from 'react-native-progress';
 import AutoHeightImage from 'react-native-auto-height-image';
 import CustomImage from '../../components/CustomImage'
 import GuessText from  '../../components/GuessText'
-export default class Search extends Component {
+export default class CreatTag extends Component {
 
     static key = "";
     static navigationOptions = {
-        tabBarLabel: '搜索',
-        tabBarIcon: ({ tintColor, focused }) => (
-            <IconSimple name="user" size={22} color={focused ? "red" : 'black'} />
-        ),
         header: ({ navigation }) => {
             let textinput;
             return (
@@ -75,16 +72,15 @@ export default class Search extends Component {
                         height: 43.7
                     }}>
                         <TextInput
-                            ref = {(text)=>{textinput = text}}
+                            ref = {(text)=>{inputName = text}}
                             placeholder='请输入您的姓名'
+                            editable={false}
                             placeholderTextColor='#555555'
-                            autoFocus={true}
                             onChangeText={(keywords) => {
-                                Search.key = keywords;
-                                navigation.state.routes[navigation.state.routes.length-1].params && navigation.state.routes[navigation.state.routes.length-1].params.changeText(Search.key)
-                                console.log("navigation",navigation)
+                                navigation.state.routes[navigation.state.routes.length - 1].params && navigation.state.routes[navigation.state.routes.length - 1].params.changeText(keywords)
+                                console.log("navig###########ation",navigation)
                             }}
-                            defaultValue={navigation.state.routes[navigation.state.routes.length-1].params && navigation.state.routes[navigation.state.routes.length-1].params.key}
+                            defaultValue={navigation.state.routes[navigation.state.routes.length - 1].params && navigation.state.routes[navigation.state.routes.length - 1].params.data}
                             style={{
                                 fontSize: 16,
                                 color: '#555555',
@@ -95,7 +91,7 @@ export default class Search extends Component {
                                 paddingTop:0,
                                 paddingBottom:0,
                                 paddingHorizontal: 20,
-                                backgroundColor: '#ffffff'
+                                backgroundColor: '#eee'
                             }}
                             underlineColorAndroid="transparent">
 
@@ -136,6 +132,7 @@ export default class Search extends Component {
         super(props);
         this.requestPageNumber = 1;
         this.state = {
+            inputName: '',
             refreshing: false,
             loadError:false,
             loadNewData:false,
@@ -144,6 +141,7 @@ export default class Search extends Component {
         };
     }
     componentWillMount() {
+        this.loadData();
         this._ViewHeight = new Animated.Value(0);
     }
     componentDidMount() {
@@ -167,11 +165,156 @@ export default class Search extends Component {
 
 
     changeText = (text)=>{
+        console.log(text);
         this.props.navigation.setParams({
             changetext:text
         })
     }
-
+    renderSpinner = (text) => {
+        return (
+            <TouchableWithoutFeedback
+                onPress={() => { this.setState({ visible: false }); }}>
+                <View key="spinner" style={styles.spinner}>
+                    <Animated.View style={{
+                        justifyContent: 'center',
+                        width: WIDTH,
+                        height: this._ViewHeight,
+                        backgroundColor: '#fcfcfc',
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        overflow: 'hidden'
+                    }}>
+                        <View style={styles.shareParent}>
+                            <TouchableOpacity
+                                style={styles.base}
+                                onPress={() => this.clickToShare('Session')}
+                            >
+                                <View style={styles.shareContent}>
+                                    <Image style={styles.shareIcon} source={require('../../assets/share_icon_wechat.png')} />
+                                    <Text style={styles.spinnerTitle}>微信好友</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.base}
+                                onPress={() => this.clickToShare('TimeLine')}
+                            >
+                                <View style={styles.shareContent}>
+                                    <Image style={styles.shareIcon} source={require('../../assets/share_icon_moments.png')} />
+                                    <Text style={styles.spinnerTitle}>微信朋友圈</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.base}
+                                onPress={() => this.clickToReport()}
+                            >
+                                <View style={styles.shareContent}>
+                                    <IconSimple name="exclamation" size={40} color='black' />
+                                    <Text style={styles.spinnerTitle}>举报</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ height: 10, backgroundColor: '#f5f5f5' }}></View>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                            <Text style={{ fontSize: 16, color: 'black', textAlign: 'center' }}>取消</Text>
+                        </View>
+                    </Animated.View>
+                </View>
+            </TouchableWithoutFeedback>
+        );
+    };
+    show = (item) => {
+        this._shareItem = item;
+        if (Platform.OS === 'android') {
+            this.share(item)
+            return;
+        }
+        this._ViewHeight.setValue(0);
+        this.setState({
+            visible: true
+        }, Animated.timing(this._ViewHeight, {
+            fromValue: 0,
+            toValue: 140, // 目标值
+            duration: 200, // 动画时间
+            easing: Easing.linear // 缓动函数
+        }).start());
+    };
+    close = () => {
+        this.setState({
+            visible: false
+        });
+    };
+    clickToShare = (type) => {
+        this.close();
+        WeChat.isWXAppInstalled().then((isInstalled) => {
+            if (isInstalled) {
+                if (type === 'Session') {
+                    WeChat.shareToSession({
+                        title: "【签名分享】",
+                        description: '晒晒我的签名',
+                        type: 'imageUrl',
+                        imageUrl: 'http://www.jianjie8.com/e/api/qianming/creat' + this._shareItem.picUrl,
+                    }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((e) => {
+                        if (error.message != -2) {
+                            Toast.show(error.message);
+                        }
+                    });
+                } else {
+                    WeChat.shareToTimeline({
+                        title: "【签名分享】",
+                        description: '晒晒我的签名',
+                        type: 'imageUrl',
+                        imageUrl: 'http://www.jianjie8.com/e/api/qianming/creat' + this._shareItem.picUrl,
+                    }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                        if (error.message != -2) {
+                            Toast.show(error.message);
+                        }
+                    });
+                }
+            } else {
+            }
+        });
+    }
+    share = async () => {
+        let data = await NativeModules.NativeUtil.showDialog();
+        if (data.wechat === 3) {
+            this.clickToReport();
+            return;
+        }
+        if (data) {
+            WeChat.isWXAppInstalled().then((isInstalled) => {
+                if (isInstalled) {
+                    if (data.wechat === 1) {
+                        WeChat.shareToSession({
+                            title: "【签名分享】",
+                            description: '晒晒我的签名',
+                            type: 'imageUrl',
+                            imageUrl: 'http://www.jianjie8.com/e/api/qianming/creat' + this._shareItem.picUrl,
+                        }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                            if (error.message != -2) {
+                                Toast.show(error.message);
+                            }
+                        });
+                    } else if (data.wechat === 2) {
+                        WeChat.shareToTimeline({
+                            title: "【签名分享】",
+                            description: '晒晒我的签名',
+                            type: 'imageUrl',
+                            imageUrl: 'http://www.jianjie8.com/e/api/qianming/creat' + this._shareItem.picUrl,
+                        }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                            if (error.message != -2) {
+                                Toast.show(error.message);
+                            }
+                        });
+                    }
+                } else {
+                    Toast.show("没有安装微信软件，请您安装微信之后再试");
+                }
+            });
+            console.log('data', data)
+        }
+    }
     ToastShow = (message) => {
         Toast.show(message, {
             duration: Toast.durations.SHORT,
@@ -190,7 +333,7 @@ export default class Search extends Component {
     loadMore = async()=>{
         let url = '';
         this.requestPageNumber += 1;
-        url =  urlConfig.Search + 'search&key=' + this.keyWord+"&page="+this.requestPageNumber;
+        url = urlConfig.CreactUrl + this.props.navigation.state.params.data;+"&page="+this.requestPageNumber;
         let res = await HttpUtil.GET(url);
         if(!res||!res.result){
             return;
@@ -201,172 +344,25 @@ export default class Search extends Component {
     };
 
     loadData = async(resolve)=>{
+        console.log('~~~~~~~~~~~~~~~~~')
         let url = '';
-        url = urlConfig.CreatUrl + this.keyWord;
+        url = urlConfig.CreactUrl + this.props.navigation.state.params.data;
 
-        console.log('search loadUrl',url);
+        console.log('creat============ loadUrl', url);
         let res = await HttpUtil.GET(url);
-        console.log('search res',res);
+        console.log('creat res', res);
         resolve && resolve();
-        let result = res.result ? res.result:[];
+        let result = res.result ? res.result : [];
         this.flatList && this.flatList.setData(this.dealWithLongArray(result), 0);
         console.log('res', res);
     };
 
-
-    share = async()=>{
-        let data = await NativeModules.NativeUtil.showDialog();
-        if (data.wechat === 3){
-            this.clickToReport();
-            return;
-        }
-        if(data){
-            WeChat.isWXAppInstalled().then((isInstalled) => {
-                if (isInstalled) {
-                    if (data.wechat === 1) {
-                        WeChat.shareToSession({
-                            title: "【网名分享】",
-                            description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                            type: 'news',
-                            webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
-                            thumbImage: urlConfig.thumbImage,
-                        }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
-                            if (error.message != -2) {
-                                Toast.show(error.message);
-                            }
-                        });
-                    } else if(data.wechat === 2){
-                        WeChat.shareToTimeline({
-                            title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                            description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                            type: 'news',
-                            webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
-                            thumbImage: urlConfig.thumbImage,
-                        }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
-                            if (error.message != -2) {
-                                Toast.show(error.message);
-                            }
-                        });
-                    }
-                } else {
-                    Toast.show("没有安装微信软件，请您安装微信之后再试");
-                }
-            });
-            console.log('data',data)
-        }
-    }
     clickToReport = () => {
         let url = urlConfig.ReportURL + '/' + this._shareItem.classid + '/' + this._shareItem.id;
         this.props.navigation.navigate('Web', {url:url});
         this.close();
     }
-    clickToShare = (type) => {
-        this.close();
-        WeChat.isWXAppInstalled().then((isInstalled) => {
-            if (isInstalled) {
-                if (type === 'Session') {
-                    WeChat.shareToSession({
-                        title: "【网名分享】",
-                        description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                        type: 'news',
-                        webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
-                        thumbImage: urlConfig.thumbImage,
-                    }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((e)=>{if (error.message != -2) {
-                        Toast.show(error.message);
-                    }});
-                } else {
-                    WeChat.shareToTimeline({
-                        title: "【网名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                        description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
-                        type: 'news',
-                        webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
-                        thumbImage: urlConfig.thumbImage,
-                    }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
-                        if (error.message != -2) {
-                            Toast.show(error.message);
-                        }
-                    });
-                }
-            } else {
-            }
-        });
-    }
-    renderSpinner = (text) => {
-        return (
-            <TouchableWithoutFeedback
-                onPress={() => {this.setState({visible: false});}}>
-                <View key="spinner" style={styles.spinner}>
-                    <Animated.View style={{  justifyContent: 'center',
-                        width:WIDTH,
-                        height: this._ViewHeight,
-                        backgroundColor: '#fcfcfc',
-                        position:'absolute',
-                        left:0,
-                        right:0,
-                        bottom:0,
-                        overflow:'hidden'}}>
-                        <View style={styles.shareParent}>
-                            {/* <TouchableOpacity
-                                style={styles.base}
-                                onPress={()=>this.clickToShare('Session')}
-                            >
-                                <View style={styles.shareContent}>
-                                    <Image style={styles.shareIcon} source={require('../../assets/share_icon_wechat.png')} />
-                                    <Text style={styles.spinnerTitle}>微信好友</Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.base}
-                                onPress={()=>this.clickToShare('TimeLine')}
-                            >
-                                <View style={styles.shareContent}>
-                                    <Image style={styles.shareIcon} source={require('../../assets/share_icon_moments.png')} />
-                                    <Text style={styles.spinnerTitle}>微信朋友圈</Text>
-                                </View>
-                            </TouchableOpacity> */}
-                            <TouchableOpacity
-                                style={styles.base}
-                                onPress={()=>this.clickToReport()}
-                            >
-                                <View style={styles.shareContent}>
-                                    <IconSimple name="exclamation" size={40} color='black'/>
-                                    <Text style={styles.spinnerTitle}>举报</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{height:10,backgroundColor:'#f5f5f5'}}></View>
-                        <View style={{justifyContent:'center',alignItems:'center',flex:1}}>
-                            <Text style={{ fontSize: 16, color: 'black',textAlign: 'center' }}>取消</Text>
-                        </View>
-                    </Animated.View>
-                </View>
-            </TouchableWithoutFeedback>
-        );
-    };
-    show = (item)=>{
-        this._shareItem = item;
-        if(Platform.OS==='android'){
-            this.share()
-            return;
-        }
-        this._ViewHeight.setValue(0);
-        this.setState({
-            visible:true
-        },  Animated.timing(this._ViewHeight, {
-            fromValue:0,
-            toValue: 140, // 目标值
-            duration: 200, // 动画时间
-            easing: Easing.linear // 缓动函数
-        }).start());
-    };
-
-
-    close = ()=>{
-        this.setState({
-            visible:false
-        });
-    };
-
+    
     dealWithLoadMoreData = (dataArray) => {
         console.log('loadMoreData',dataArray);
         let waitDealArray =this.FlatListData.concat(dataArray).filter((value)=>{return !(!value || value === "");});
@@ -463,18 +459,29 @@ export default class Search extends Component {
         }catch (e){}
     }
     renderTextAndImage = (item, index) => {
-        return <View>
-            <Text style={{
-                fontSize: 18,
-                lineHeight: 26,
-                color: item.isCopyed ? '#666666' : 'black',
-                // paddingBottom: 10,
-                fontWeight: '300'
-            }} onPress={() => { this.setClipboardContent(item.title && item.title, index, item) }}>
-                {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}{'\n'}
-                {item.ftitle && item.ftitle.replace(/^(\r\n)|(\n)|(\r)/, "")}
-            </Text>
-        </View>
+        return <TouchableOpacity activeOpacity={1} onPress={() => {
+            // this.props.navigation.navigate('Cdetail', {
+            //     cid: item.cid,
+            //     picUrl: item.picUrl
+            // });
+        }}>
+            <View style={{ backgroundColor: '#ffffff', paddingHorizontal: 20, paddingVertical: 15, justifyContent: 'center', alignItems: 'center' }}>
+                <View>
+                    {/* <Text>{item.font}</Text> */}
+                {item.picUrl ? <ImageProgress
+                        source={{ uri: "http://www.jianjie8.com/e/api/qianming/creat" + item.picUrl }}
+                    resizeMode={'cover'}
+                    indicator={Pie}
+                    indicatorProps={{
+                        size: 40,
+                        borderWidth: 0,
+                        color: 'rgba(255, 160, 0, 0.8)',
+                        unfilledColor: 'rgba(200, 200, 200, 0.1)'
+                    }}
+                    style={{ width: WIDTH - 40, height: 100 }} /> : null}
+                </View>
+            </View>
+        </TouchableOpacity>
     }
     clickToFavas = (classid,id) => {
         let url = urlConfig.FavasURL + '/' + classid + '/' + id;
@@ -508,14 +515,37 @@ export default class Search extends Component {
             }}>
                 <View>
                     {index === 0 ? <View style={{width:WIDTH,height:10,backgroundColor:Color.f5f5f5}}/> :<View/>}
-                    <View style={{ backgroundColor: 'white', paddingHorizontal: 20,paddingTop:20}}>
+                    <View style={{ backgroundColor: 'white', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20}}>
                         {this.renderTextAndImage(item,index)}
+                        <View style={{ flexDirection: 'row', justifyContent:'space-around',borderTopColor:'red'}}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity activeOpacity={1} onPress={() => { this.show(item) }} hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
+                                    <IconSimple style={{ marginLeft: 20,marginBottom:5 }} name="share" size={20} color='#5C5C5C' />
+                                    <Text>分享到微信</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity activeOpacity={1} onPress={this.saveImg.bind(this, "http://www.jianjie8.com/e/api/qianming/creat" + item.picUrl)} hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
+                                    <IconSimple style={{ marginLeft: 15, marginBottom: 5}} name="cloud-download" size={20} color='#5C5C5C' />
+                                    <Text>保存图片</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
+                    
                 </View>
             </TouchableOpacity>
         )
     }
-
+    //保存图片
+    saveImg(img) {
+        var promise = CameraRoll.saveToCameraRoll(img);
+        promise.then(function (result) {
+            alert('保存成功,请到相册查看。');
+        }).catch(function (error) {
+            alert('保存失败！\n' + error);
+        });
+    }
     _keyExtractor = (item, index) => index;
 
     render() {
@@ -533,17 +563,16 @@ export default class Search extends Component {
                     ifRenderFooter={true}
                 />
                 <ModalUtil
-                    visible = {this.state.visible}
-                    close = {this.close}
-                    contentView = {this.renderSpinner}/>
-
+                    visible={this.state.visible}
+                    close={this.close}
+                    contentView={this.renderSpinner} />
             </View>
         );
     }
 
 }
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#027fff',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88
@@ -601,8 +630,3 @@ const styles = StyleSheet.create({
         height: 40
     },
 });
-
-
-
-
-

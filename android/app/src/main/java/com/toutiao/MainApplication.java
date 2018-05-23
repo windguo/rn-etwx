@@ -3,6 +3,7 @@ package com.toutiao;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.brentvatne.react.ReactVideoPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.theweflex.react.WeChatPackage;
 import com.theweflex.react.WeChatPackage;
@@ -46,6 +47,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactVideoPackage(),
             new RNDeviceInfo(),
             new VectorIconsPackage(),
             new RNGestureHandlerPackage(),
