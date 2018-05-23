@@ -196,6 +196,7 @@ export default class MusicPlayer extends Component {
                             minimumTrackTintColor={commonStyle.themeColor}
                             maximumTrackTintColor={commonStyle.iconGray}
                             step={1}
+                            // thumbImage={(require('../assets/share.jpg'))}
                             onValueChange={value => this.setState({ currentTime: value })}
                             onSlidingComplete={value => this.player.seek(value)}
                         />
@@ -228,7 +229,7 @@ export default class MusicPlayer extends Component {
                 <Video
                     ref={video => this.player = video}
                     source={{ uri: this.props.navigation.state.params.mp3_url }}
-                    volume={1.0}
+                    volume={5.0}
                     paused={this.state.paused}
                     playInBackground={true}
                     onLoadStart={this.loadStart}
@@ -338,7 +339,7 @@ const styles = StyleSheet.create({
         ...ifIphoneX({
             top: 4,
         }, {
-            top: 22,
+            top: 26,
             }),
         borderColor: commonStyle.gray,
         borderWidth: 20,
