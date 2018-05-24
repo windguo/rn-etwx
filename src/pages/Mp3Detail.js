@@ -449,8 +449,8 @@ const styles = StyleSheet.create({
             paddingTop: 44,
             height: 88
         }, {
-                paddingTop: Platform.OS === "ios" ? 20 : SCALE(StatusBarHeight()),
-                height: 64,
+                paddingTop: Platform.OS === "ios" ? 30 : SCALE(StatusBarHeight()),
+                height: 74,
             }),
     },
     title: {
@@ -462,10 +462,10 @@ const styles = StyleSheet.create({
     djCard: {
         width: 300,
         height: 300,
-        top: 20,
         ...ifIphoneX({
             top: 150,
         }),
+        top: 12,
         borderColor: commonStyle.gray,
         borderWidth: 20,
         borderRadius: 190,
