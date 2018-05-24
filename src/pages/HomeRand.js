@@ -446,7 +446,7 @@ export default class Home extends Component {
                                 nurl: item.nurl
                             });
                     }}>
-                        <MaterialIcons style={{backgroundColor:'white',borderRadius:20}} name="play-circle-filled" size={65} color='#fe5f01' />
+                        <MaterialIcons style={{backgroundColor:'white',borderRadius:20}} name="play-circle-filled" size={45} color='#fe5f01' />
                     </Text>
                 </View>
             </View>

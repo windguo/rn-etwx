@@ -1660,7 +1660,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.windguos.ertongwenxue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.widguos.ertongwenxue;
 				PRODUCT_NAME = toutiao;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1708,7 +1708,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.windguos.ertongwenxue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.widguos.ertongwenxue;
 				PRODUCT_NAME = toutiao;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1870,7 +1870,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.windguos.ertongwenxue;
+				PRODUCT_BUNDLE_IDENTIFIER = com.widguos.ertongwenxue;
 				PRODUCT_NAME = toutiao;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
