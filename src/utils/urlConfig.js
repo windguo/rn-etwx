@@ -38,9 +38,8 @@ export default urlConfig = {
     //分享出去的图片
     thumbImage: 'http://jianjie8.com/skin/ertong/images/icon_share.png',
     //复制完跳去详情
-     DetailUrl: "http://ertong.jianjie8.com/detail/",
-    Search:'/e/api/ertongwenxue/?classid=55&getJson=',
-     DetailUrl:'/e/api/ertongwenxue/?getJson=content'
+     ShareUrl: "http://ertong.jianjie8.com/detail/",
+    Search:'/e/api/ertongwenxue/?classid=55&getJson='
 
 
 }

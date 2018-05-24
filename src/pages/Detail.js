@@ -96,7 +96,7 @@ export  default  class Detail extends Component {
                     WeChat.shareToSession({
                         imageUrl: this.state.data && this.state.data.nurl,
                         type: 'news',
-                        webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                        webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
                     }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((e) => {
                         if (error.message != -2) {
                             Toast.show(error.message);
@@ -106,7 +106,7 @@ export  default  class Detail extends Component {
                     WeChat.shareToTimeline({
                         imageUrl: this.state.data && this.state.data.nurl,
                         type: 'news',
-                        webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                        webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
                     }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
                         if (error.message != -2) {
                             Toast.show(error.message);
@@ -151,7 +151,7 @@ export  default  class Detail extends Component {
                         WeChat.shareToSession({
                             imageUrl: this.state.data && this.state.data.nurl,
                             type: 'news',
-                            webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                            webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
                         }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
                             if (error.message != -2) {
                                 Toast.show(error.message);
@@ -161,7 +161,7 @@ export  default  class Detail extends Component {
                         WeChat.shareToSession({
                             imageUrl: this.state.data && this.state.data.nurl,
                             type: 'news',
-                            webpageUrl: urlConfig.DetailUrl + this.state.data.classid + '/' + this.state.data.id
+                            webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
                         }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
                             if (error.message != -2) {
                                 Toast.show(error.message);

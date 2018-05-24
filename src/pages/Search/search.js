@@ -226,7 +226,7 @@ export default class Search extends Component {
                             title: "【儿童文学分享】",
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             type: 'news',
-                            webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
+                            webpageUrl: urlConfig.ShareUrl + this._shareItem.classid + '/' + this._shareItem.id,
                             thumbImage: urlConfig.thumbImage,
                         }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
                             if (error.message != -2) {
@@ -238,7 +238,7 @@ export default class Search extends Component {
                             title: "【儿童文学分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             type: 'news',
-                            webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
+                            webpageUrl: urlConfig.ShareUrl + this._shareItem.classid + '/' + this._shareItem.id,
                             thumbImage: urlConfig.thumbImage,
                         }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
                             if (error.message != -2) {
@@ -267,7 +267,7 @@ export default class Search extends Component {
                         title: "【儿童文学分享】",
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         type: 'news',
-                        webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
+                        webpageUrl: urlConfig.ShareUrl + this._shareItem.classid + '/' + this._shareItem.id,
                         thumbImage: urlConfig.thumbImage,
                     }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((e)=>{if (error.message != -2) {
                         Toast.show(error.message);
@@ -277,7 +277,7 @@ export default class Search extends Component {
                         title: "【儿童文学分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         type: 'news',
-                        webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
+                        webpageUrl: urlConfig.ShareUrl + this._shareItem.classid + '/' + this._shareItem.id,
                         thumbImage: urlConfig.thumbImage,
                     }).then((message)=>{message.errCode === 0  ? this.ToastShow('分享成功') : this.ToastShow('分享失败')}).catch((error) => {
                         if (error.message != -2) {
