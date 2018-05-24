@@ -223,7 +223,7 @@ export default class Search extends Component {
                 if (isInstalled) {
                     if (data.wechat === 1) {
                         WeChat.shareToSession({
-                            title: "【签名分享】",
+                            title: "【儿童文学分享】",
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -235,7 +235,7 @@ export default class Search extends Component {
                         });
                     } else if(data.wechat === 2){
                         WeChat.shareToTimeline({
-                            title: "【签名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
+                            title: "【儿童文学分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                             type: 'news',
                             webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -264,7 +264,7 @@ export default class Search extends Component {
             if (isInstalled) {
                 if (type === 'Session') {
                     WeChat.shareToSession({
-                        title: "【签名分享】",
+                        title: "【儿童文学分享】",
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -274,7 +274,7 @@ export default class Search extends Component {
                     }});
                 } else {
                     WeChat.shareToTimeline({
-                        title: "【签名分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
+                        title: "【儿童文学分享】" + this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         description: this._shareItem && this._shareItem.title.replace(/^(\r\n)|(\n)|(\r)/,""),
                         type: 'news',
                         webpageUrl: urlConfig.DetailUrl + this._shareItem.classid + '/' + this._shareItem.id,
@@ -461,34 +461,30 @@ export default class Search extends Component {
         }catch (e){}
     }
     renderTextAndImage = (item, index) => {
-        if (item.classid == '80' || item.classid == '85' || item.classid == '86' || item.classid == '87'){
-            return <View>
-                <Text style={{
-                    fontSize: 18,
-                    lineHeight: 26,
-                    color: item.isCopyed ? '#666666' : 'black',
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                    fontWeight: '300'
-                }} onPress={() => { this.setClipboardContent(item.title && item.title, index, item) }}>
-                    {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}{'\n'}                     {item.ftitle && item.ftitle.replace(/^(\r\n)|(\n)|(\r)/, "")}{'\n'}
-                    {item.ftitle && item.ftitle.replace(/^(\r\n)|(\n)|(\r)/, "")}
-                </Text>
-            </View>
-        } else {
-            return <View>
-                <Text style={{
-                    fontSize: 18,
-                    lineHeight: 26,
-                    color: item.isCopyed ? '#666666' : 'black',
-                    paddingBottom: 10,
-                    fontWeight: '300'
-                }} onPress={() => { this.setClipboardContent(item.title && item.title, index, item) }}>
-                    {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}{'\n'}
-                    {item.ftitle && item.ftitle.replace(/^(\r\n)|(\n)|(\r)/, "")}
-                </Text>
-            </View>
-        }
+        return <View style={{
+            paddingTop: 10,
+            paddingBottom: 10,
+        }}>
+            <Text style={{
+                fontSize: 18,
+                lineHeight: 26,
+                paddingBottom: 10,
+                fontWeight: '300'
+            }} onPress={() => {
+                this.props.navigation.navigate('Detail', { id: item.id, title: item.title });
+            }}>
+                {item.title && item.title.replace(/^(\r\n)|(\n)|(\r)/, "")}
+            </Text>
+            <Text style={{
+                fontSize: 16,
+                lineHeight: 26,
+                fontWeight: '300'
+            }} onPress={() => {
+                this.props.navigation.navigate('Detail', { id: item.id, title: item.title });
+            }}>
+                {item.smalltext && item.smalltext.replace(/^(\r\n)|(\n)|(\r)/, "")}
+            </Text>
+        </View>
     }
     clickToFavas = (classid,id) => {
         let url = urlConfig.FavasURL + '/' + classid + '/' + id;
@@ -522,33 +518,6 @@ export default class Search extends Component {
             }}>
                 <View>
                     {index === 0 ? <View style={{width:WIDTH,height:10,backgroundColor:Color.f5f5f5}}/> :<View/>}
-                    <View style={{ backgroundColor:'#ffffff',flexDirection: 'row', paddingHorizontal: 20, paddingTop: 15, justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: '#666666', fontWeight: '100' }} onPress={() => {
-                                this.props.navigation.navigate('User', {
-                                    username: item.username,
-                                    userid: item.userid
-                                });
-                            }}>
-                                ^
-                                <Text>
-                                    {item.username}
-                                </Text>
-                                ^
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View>
-                                <Text style={{
-                                    paddingVertical: 2,
-                                    color: '#666666',
-                                    fontWeight: '100'
-                                }}>
-                                    
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
                     <View style={{ backgroundColor: 'white', paddingHorizontal: 20,paddingTop:10}}>
                         {this.renderTextAndImage(item,index)}
                         <View
