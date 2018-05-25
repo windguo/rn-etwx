@@ -156,11 +156,6 @@ export default class VideoPlayScreen extends Component {
                             </View> : null
                     }
                 </View>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Button title={'开始播放'} onPress={() => { this.playVideo() }} />
-                    <Button title={'暂停播放'} onPress={() => { this.pauseVideo() }} />
-                    <Button title={'切换视频'} onPress={() => { this.switchVideo("http://124.129.157.208:8810/SD/zhishidian/grade_8_1/wuli_shu/01.mp4", 0) }} />
-                </View>
             </View>
         )
     }
