@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { View, Dimensions, Image, Text, Slider, TouchableWithoutFeedback, TouchableOpacity, Button, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Slider, Animated, Easing, Platform, findNodeHandle, Dimensions, ImageBackground, TouchableWithoutFeedback, Button } from 'react-native';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation';
-
+import { ifIphoneX } from '../utils/iphoneX';
+import IconSimple from 'react-native-vector-icons/SimpleLineIcons';
+import * as WeChat from 'react-native-wechat';
+import Toast from 'react-native-root-toast';
+const WIDTH = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const screenWidth = Dimensions.get('window').width;
 
 function formatTime(second) {
@@ -21,7 +28,24 @@ function formatTime(second) {
 export default class VideoPlayScreen extends Component {
 
     static navigationOptions = {
-        headerTitle: '测试视频播放'
+        title: '视频详情页',
+        header: ({ navigation }) => {
+            return (
+                <ImageBackground style={{ ...header }} source={require('../assets/backgroundImageHeader.png')} resizeMode='cover'>
+                    <TouchableOpacity activeOpacity={1} onPress={() => {
+                        navigation.goBack(null);
+                    }}>
+                        <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
+                            <IconSimple name="arrow-left" size={20} color={'#ffffff'} />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: '#ffffff' }}>详情页</Text>
+                    <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
+
+                    </View>
+                </ImageBackground>
+            )
+        }
     };
 
     constructor(props) {
@@ -341,3 +365,17 @@ const styles = StyleSheet.create({
         left: 0
     },
 });
+
+const header = {
+    backgroundColor: '#C7272F',
+    ...ifIphoneX({
+        paddingTop: 44,
+        height: 88
+    }, {
+            paddingTop: Platform.OS === "ios" ? 20 : SCALE(StatusBarHeight()),
+            height: 64,
+        }),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end'
+}
