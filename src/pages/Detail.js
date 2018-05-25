@@ -75,7 +75,7 @@ export  default  class Detail extends Component {
         this.loadData();
     }
     loadData = async (resolve) => {
-        let url = urlConfig.DetailUrl + '&id=' + this.props.navigation.state.params.id;
+        let url = urlConfig.contentApi + '&id=' + this.props.navigation.state.params.id;
         console.log('loadUrl', url);
         let res = await HttpUtil.GET(url);
         console.log(res);

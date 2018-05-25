@@ -20,6 +20,8 @@ export default urlConfig = {
     //栏目列表数据后面拼接&classid=3
     // sectionListData:'/e/api/?getJson=column',
     sectionListData:'/e/api/ertongwenxue?getJson=column',
+    // 内容api
+    contentApi:'/e/api/ertongwenxue?getJson=content',
 //随机
     sectionListDataRand:'/e/api/ertongwenxue?getJson=column',
     //发布地址
