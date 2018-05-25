@@ -39,7 +39,7 @@ export default class VideoPlayScreen extends Component {
                             <IconSimple name="arrow-left" size={20} color={'#ffffff'} />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: '#ffffff' }}>详情页</Text>
+                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: '#ffffff' }}>视频详情页</Text>
                     <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
 
                     </View>
