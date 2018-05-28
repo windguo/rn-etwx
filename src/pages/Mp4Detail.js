@@ -10,6 +10,7 @@ const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 const screenWidth = Dimensions.get('window').width;
 
 function formatTime(second) {
@@ -26,32 +27,41 @@ function formatTime(second) {
 }
 
 export default class VideoPlayScreen extends Component {
-
+    
     static navigationOptions = {
-        title: '视频详情页',
+        tabBarLabel: '看故事',
+        tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialIcons name="ondemand-video" size={22} color={focused ? "#fe5f01" : 'black'} />
+        ),
         header: ({ navigation }) => {
-            return (
-                <ImageBackground style={{ ...header }} source={require('../assets/backgroundImageHeader.png')} resizeMode='cover'>
-                    <TouchableOpacity activeOpacity={1} onPress={() => {
-                        navigation.goBack(null);
-                    }}>
+            if (navigation.state.routes[1].params.fullVideo){
+                return (
+                    <ImageBackground style={{ ...header }} source={require('../assets/backgroundImageHeader.png')} resizeMode='cover'>
+                        <TouchableOpacity activeOpacity={1} onPress={() => {
+                            navigation.goBack(null);
+                        }}>
+                            <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
+                                <IconSimple name="arrow-left" size={20} color={'#ffffff'} />
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: '#ffffff' }}>详情页</Text>
                         <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
-                            <IconSimple name="arrow-left" size={20} color={'#ffffff'} />
-                        </View>
-                    </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: '#ffffff' }}>视频详情页</Text>
-                    <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
 
-                    </View>
-                </ImageBackground>
-            )
+                        </View>
+                    </ImageBackground>
+                )
+            }
+            else{
+                return false;
+            }
         }
     };
+
 
     constructor(props) {
         super(props);
         this.state = {
-            videoUrl: this.props.navigation.state.params.mp4_url,
+            videoUrl: this.props.navigation.state.params.nurl,
             videoCover: this.props.navigation.state.params.titlepic,
             videoWidth: screenWidth,
             videoHeight: screenWidth * 9 / 16, // 默认16：9的宽高比
@@ -71,7 +81,7 @@ export default class VideoPlayScreen extends Component {
                 <View style={{ width: this.state.videoWidth, height: this.state.videoHeight, backgroundColor: '#000000' }}>
                     <Video
                         ref={(ref) => this.videoPlayer = ref}
-                        source={{ uri: this.props.navigation.state.params.mp4_url }}
+                        source={{ uri: this.props.navigation.state.params.nurl }}
                         rate={1.0}
                         volume={1.0}
                         muted={false}
@@ -111,29 +121,24 @@ export default class VideoPlayScreen extends Component {
                                 left: 0,
                                 width: this.state.videoWidth,
                                 height: this.state.videoHeight,
-                                backgroundColor: this.state.isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.2)',
+                                backgroundColor: this.state.isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.1)',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                            {
-                                this.state.isPlaying ? null :
-                                    <TouchableWithoutFeedback onPress={() => { this.onPressPlayButton() }}>
-                                        <Image
-                                            style={styles.playButton}
-                                            source={require('../../assets/image/icon_video_play.png')}
-                                        />
-                                    </TouchableWithoutFeedback>
-                            }
+                            {this.state.isPlaying ?
+                                null:
+                                <TouchableWithoutFeedback onPress={() => { this.onPressPlayButton() }}>
+                                    <MaterialIcons name={'play-arrow'} size={30} color='#ffffff' />
+                                </TouchableWithoutFeedback>}
                         </View>
                     </TouchableWithoutFeedback>
                     {
                         this.state.showVideoControl ?
                             <View style={[styles.control, { width: this.state.videoWidth }]}>
                                 <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlPlayPress() }}>
-                                    <Image
-                                        style={styles.playControl}
-                                        source={this.state.isPlaying ? require('../../assets/image/icon_control_pause.png') : require('../../assets/image/icon_control_play.png')}
-                                    />
+                                    {this.state.paused ?
+                                        <MaterialIcons name={'play-arrow'} size={30} color='#ffffff' /> :
+                                        <MaterialIcons name={'pause'} size={30} color='#ffffff' />}
                                 </TouchableOpacity>
                                 <Text style={styles.time}>{formatTime(this.state.currentTime)}</Text>
                                 <Slider
@@ -148,10 +153,9 @@ export default class VideoPlayScreen extends Component {
                                 />
                                 <Text style={styles.time}>{formatTime(this.state.duration)}</Text>
                                 <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlShrinkPress() }}>
-                                    <Image
-                                        style={styles.shrinkControl}
-                                        source={this.state.isFullScreen ? require('../../assets/image/icon_control_shrink_screen.png') : require('../../assets/image/icon_control_full_screen.png')}
-                                    />
+                                    {this.state.isFullScreen ?
+                                        <MaterialIcons name={'fullscreen'} size={30} color='#ffffff' /> :
+                                        <MaterialIcons name={'fullscreen-exit'} size={30} color='#ffffff' />}
                                 </TouchableOpacity>
                             </View> : null
                     }
@@ -172,6 +176,7 @@ export default class VideoPlayScreen extends Component {
 
     _onLoaded = (data) => {
         console.log('视频加载完成');
+        
         this.setState({
             duration: data.duration,
         });
@@ -188,15 +193,11 @@ export default class VideoPlayScreen extends Component {
 
     _onPlayEnd = () => {
         console.log('视频播放结束');
-        this.setState({
-            currentTime: 0,
-            isPlaying: false,
-            playFromBeginning: true
-        });
+        this.props.navigation.goBack(null);
     };
 
     _onPlayError = () => {
-        console.log('视频播放失败');
+        Toast.show('视频播放失败，请稍后再试。')
     };
 
     ///-------控件点击事件-------
@@ -225,7 +226,11 @@ export default class VideoPlayScreen extends Component {
             )
         }
     }
-
+    componentDidMount(){
+        this.props.navigation.setParams({
+            fullVideo: true
+        })
+    }
     /// 点击了播放器正中间的播放按钮
     onPressPlayButton() {
         let isPlay = !this.state.isPlaying;
@@ -249,8 +254,16 @@ export default class VideoPlayScreen extends Component {
     /// 点击了工具栏上的全屏按钮
     onControlShrinkPress() {
         if (this.state.isFullScreen) {
+            console.log('1111');
+            this.props.navigation.setParams({
+                fullVideo: true
+            })
             Orientation.lockToPortrait();
         } else {
+            console.log('2222');
+            this.props.navigation.setParams({
+                fullVideo:false
+            })
             Orientation.lockToLandscape();
         }
     }
@@ -327,8 +340,7 @@ export default class VideoPlayScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#f0f0f0'
+        flex: 1
     },
     playButton: {
         width: 50,
@@ -362,7 +374,7 @@ const styles = StyleSheet.create({
 });
 
 const header = {
-    backgroundColor: '#C7272F',
+    backgroundColor: '#eee',
     ...ifIphoneX({
         paddingTop: 44,
         height: 88

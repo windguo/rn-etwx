@@ -406,7 +406,7 @@ export default class Home extends Component {
                             id: item.id,
                             title: item.title,
                             titlepic: item.titlepic,
-                            mp4_url: item.mp4_url
+                            nurl: item.nurl
                         });
                 }} style={{ fontSize: 18, paddingBottom: 10 }}>{item.title}</Text>
             </View>
@@ -417,7 +417,7 @@ export default class Home extends Component {
                             id: item.id,
                             title: item.title,
                             titlepic: item.titlepic,
-                            mp4_url: item.mp4_url
+                            nurl: item.nurl
                         });
                 }} >
                     {item.titlepic ? <ImageProgress
@@ -457,7 +457,7 @@ export default class Home extends Component {
                                                 id: item.id,
                                                 title: item.title,
                                                 titlepic: item.titlepic,
-                                                mp4_url: item.mp4_url
+                                                nurl: item.nurl
                                             });
                                     }}
                                     hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
