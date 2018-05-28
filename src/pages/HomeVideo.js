@@ -44,6 +44,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import HttpUtil from '../utils/HttpUtil';
 import ImageProgress from 'react-native-image-progress';
 import { Pie, Bar, Circle, CircleSnail } from 'react-native-progress';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AutoHeightImage from 'react-native-auto-height-image';
 import CustomImage from '../components/CustomImage'
 import GuessText from '../components/GuessText'
@@ -432,6 +433,17 @@ export default class Home extends Component {
                         }}
                         style={{ width: WIDTH - 40, height: 100 }} /> : null}
                 </Text>
+                <Text style={styles.absoluteView} onPress={() => {
+                    this.props.navigation.navigate(
+                        'Mp4Detail', {
+                            id: item.id,
+                            title: item.title,
+                            titlepic: item.titlepic,
+                            nurl: item.nurl
+                        });
+                }}>
+                    <MaterialIcons name="play-circle-outline" size={45} color='#fe5f01' />
+                </Text>
             </View>
         </View>
     }
@@ -586,5 +598,14 @@ const styles = StyleSheet.create({
     shareIcon: {
         width: 40,
         height: 40
+    },
+    absoluteView: {
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        top: '40%',
+        left: '40%',
+        right: '40%',
+        bottom: '40%'
     }
 });

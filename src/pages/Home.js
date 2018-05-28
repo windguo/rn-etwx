@@ -409,7 +409,7 @@ export default class Home extends Component {
                 fontSize: 18,
                 lineHeight: 26,
                 paddingBottom: 10,
-                fontWeight: '300'
+                fontWeight: 'bold'
             }} onPress={() => {
                 this.props.navigation.navigate('Detail', { id: item.id, title: item.title });
             }}>
@@ -417,7 +417,7 @@ export default class Home extends Component {
             </Text>
             <Text style={{
                 fontSize: 16,
-                lineHeight: 26,
+                lineHeight: 22,
                 paddingBottom: 10,
                 fontWeight: '100'
             }} onPress={() => {

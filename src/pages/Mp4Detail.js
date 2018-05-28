@@ -121,14 +121,14 @@ export default class VideoPlayScreen extends Component {
                                 left: 0,
                                 width: this.state.videoWidth,
                                 height: this.state.videoHeight,
-                                backgroundColor: this.state.isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.1)',
+                                backgroundColor: this.state.isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.4)',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
                             {this.state.isPlaying ?
                                 null:
                                 <TouchableWithoutFeedback onPress={() => { this.onPressPlayButton() }}>
-                                    <MaterialIcons name={'play-arrow'} size={30} color='#ffffff' />
+                                    <MaterialIcons name="play-circle-outline" size={45} color='#fe5f01' />
                                 </TouchableWithoutFeedback>}
                         </View>
                     </TouchableWithoutFeedback>
@@ -137,7 +137,7 @@ export default class VideoPlayScreen extends Component {
                             <View style={[styles.control, { width: this.state.videoWidth }]}>
                                 <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlPlayPress() }}>
                                     {this.state.paused ?
-                                        <MaterialIcons name={'play-arrow'} size={30} color='#ffffff' /> :
+                                        <MaterialIcons name="play-circle-outline" size={45} color='#fe5f01' /> :
                                         <MaterialIcons name={'pause'} size={30} color='#ffffff' />}
                                 </TouchableOpacity>
                                 <Text style={styles.time}>{formatTime(this.state.currentTime)}</Text>
