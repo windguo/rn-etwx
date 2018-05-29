@@ -10,6 +10,7 @@ const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -34,7 +35,7 @@ export default class VideoPlayScreen extends Component {
             <MaterialIcons name="ondemand-video" size={22} color={focused ? "#fe5f01" : 'black'} />
         ),
         header: ({ navigation }) => {
-            if (navigation.state.routes[1].params.fullVideo){
+            if (!navigation.state.routes[1].params.fullVideo){
                 return (
                     <ImageBackground style={{ ...header }} source={require('../assets/backgroundImageHeader.png')} resizeMode='cover'>
                         <TouchableOpacity activeOpacity={1} onPress={() => {
@@ -44,7 +45,7 @@ export default class VideoPlayScreen extends Component {
                                 <IconSimple name="arrow-left" size={20} color={'#ffffff'} />
                             </View>
                         </TouchableOpacity>
-                        <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: '#ffffff' }}>详情页</Text>
+                        <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: '#ffffff' }}>故事播放页</Text>
                         <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
 
                         </View>
@@ -52,7 +53,7 @@ export default class VideoPlayScreen extends Component {
                 )
             }
             else{
-                return false;
+                return null;
             }
         }
     };
@@ -61,6 +62,7 @@ export default class VideoPlayScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            data: [],
             videoUrl: this.props.navigation.state.params.nurl,
             videoCover: this.props.navigation.state.params.titlepic,
             videoWidth: screenWidth,
@@ -97,7 +99,7 @@ export default class VideoPlayScreen extends Component {
                         onEnd={this._onPlayEnd}
                         onError={this._onPlayError}
                         onBuffer={this._onBuffering}
-                        style={{ width: this.state.videoWidth, height: this.state.videoHeight }}
+                        style={{ width: this.state.videoWidth, height: this.state.videoHeight,paddingTop:20 }}
                     />
                     {
                         this.state.showVideoCover ?
@@ -121,7 +123,7 @@ export default class VideoPlayScreen extends Component {
                                 left: 0,
                                 width: this.state.videoWidth,
                                 height: this.state.videoHeight,
-                                backgroundColor: this.state.isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.4)',
+                                backgroundColor: this.state.isPlaying ? 'transparent' : 'transparent',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
@@ -136,9 +138,11 @@ export default class VideoPlayScreen extends Component {
                         this.state.showVideoControl ?
                             <View style={[styles.control, { width: this.state.videoWidth }]}>
                                 <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlPlayPress() }}>
-                                    {this.state.paused ?
-                                        <MaterialIcons name="play-circle-outline" size={45} color='#fe5f01' /> :
-                                        <MaterialIcons name={'pause'} size={30} color='#ffffff' />}
+                                    {this.state.isPlaying ?
+                                        <MaterialIcons name="pause" size={30} color='#ffffff' />
+                                         :
+                                        <MaterialIcons name={'play-circle-outline'} size={30} color='#ffffff' />
+                                    }
                                 </TouchableOpacity>
                                 <Text style={styles.time}>{formatTime(this.state.currentTime)}</Text>
                                 <Slider
@@ -154,16 +158,154 @@ export default class VideoPlayScreen extends Component {
                                 <Text style={styles.time}>{formatTime(this.state.duration)}</Text>
                                 <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlShrinkPress() }}>
                                     {this.state.isFullScreen ?
-                                        <MaterialIcons name={'fullscreen'} size={30} color='#ffffff' /> :
-                                        <MaterialIcons name={'fullscreen-exit'} size={30} color='#ffffff' />}
+                                        <MaterialIcons name={'fullscreen-exit'} size={30} color='#ffffff' /> :
+                                        <MaterialIcons name={'fullscreen'} size={30} color='#ffffff' />}
                                 </TouchableOpacity>
                             </View> : null
                     }
                 </View>
+                <View style={styles.toolBar}>
+                    <View style={styles.cdStyle}>
+                        <TouchableOpacity
+                            style={{ flexDirection: 'row', marginLeft: 10 }}
+                            onPress={() => this.clickToShare('Session')}
+                        >
+                            <View style={styles.shareContent}>
+                                <Icon name="wechat" size={30} color={'#fe5f01'} />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ flexDirection: 'row', marginLeft: 10 }}
+                            onPress={() => this.clickToShare('TimeLine')}
+                        >
+                            <View style={styles.shareContent}>
+                                <Image style={{ width: 30, height: 30 }} source={require('../assets/share_icon_moments.png')} />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ flexDirection: 'row', marginLeft: 10 }}
+                            onPress={() => this.clickToReport()}
+                        >
+                            <View style={styles.shareContent}>
+                                <IconSimple name="exclamation" size={30} color={'#fe5f01'} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <ScrollView style={{marginBottom:60}}>
+                    <View style={{paddingLeft:30,paddingRight:30}}>
+                        <View style={{alignItems:'center',justifyContent:'center'}}>
+                            <Text style={{ paddingBottom: 30, fontSize: 28 }}>
+                                {this.props.navigation.state.params.title}
+                            </Text>
+                        </View>
+                        <Text style={{lineHeight:24}}>
+                            {this.props.navigation.state.params.smalltext}
+                        </Text>
+                    </View>
+                </ScrollView>
             </View>
         )
     }
 
+    clickToShare = (type) => {
+        console.log('XXXXXXXXXXXXX', urlConfig.thumbImage);
+        this.close();
+        WeChat.isWXAppInstalled().then((isInstalled) => {
+            if (isInstalled) {
+                if (type === 'Session') {
+                    WeChat.shareToSession({
+                        title: "【儿童文学分享】",
+                        description: this.props.navigation.state.params.title,
+                        type: 'news',
+                        webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id,
+                        thumbImage: this.props.navigation.state.params.titlepic,
+                    }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((e) => {
+                        if (error.message != -2) {
+                            Toast.show(error.message);
+                        }
+                    });
+                } else {
+                    WeChat.shareToTimeline({
+                        title: "【儿童文学分享】" + this.props.navigation.state.params.title,
+                        // description: this.props.navigation.state.params.title,
+                        type: 'news',
+                        webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id,
+                        thumbImage: this.props.navigation.state.params.titlepic,
+                    }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                        if (error.message != -2) {
+                            Toast.show(error.message);
+                        }
+                    });
+                }
+            } else {
+            }
+        });
+    }
+    show = (item) => {
+        this.state.data = item;
+        if (Platform.OS === 'android') {
+            this.share()
+            return;
+        }
+        this._ViewHeight.setValue(0);
+        this.setState({
+            visible: true
+        }, Animated.timing(this._ViewHeight, {
+            fromValue: 0,
+            toValue: 140, // 目标值
+            duration: 200, // 动画时间
+            easing: Easing.linear // 缓动函数
+        }).start());
+    };
+    close = () => {
+        this.setState({
+            visible: false
+        });
+    };
+    share = async () => {
+        let data = await NativeModules.NativeUtil.showDialog();
+        if (data.wechat === 3) {
+            this.clickToReport();
+            return;
+        }
+        if (data) {
+            WeChat.isWXAppInstalled().then((isInstalled) => {
+                if (isInstalled) {
+                    if (data.wechat === 1) {
+                        WeChat.shareToSession({
+                            imageUrl: this.props.navigation.state.params.titlepic,
+                            type: 'news',
+                            webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id
+                        }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                            if (error.message != -2) {
+                                Toast.show(error.message);
+                            }
+                        });
+                    } else if (data.wechat === 2) {
+                        WeChat.shareToSession({
+                            imageUrl: this.props.navigation.state.params.titlepic,
+                            type: 'news',
+                            webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id
+                        }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
+                            if (error.message != -2) {
+                                Toast.show(error.message);
+                            }
+                        });
+                    }
+                } else {
+                    Toast.show("没有安装微信软件，请您安装微信之后再试");
+                }
+            });
+            console.log('data', data)
+        }
+    };
+
+    clickToReport = () => {
+        let url = urlConfig.ReportURL + '/' + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id;
+        this.props.navigation.navigate('Web', { url: url });
+        this.close();
+    };
     /// -------Video组件回调事件-------
 
     _onLoadStart = () => {
@@ -193,7 +335,12 @@ export default class VideoPlayScreen extends Component {
 
     _onPlayEnd = () => {
         console.log('视频播放结束');
+        this.props.navigation.setParams({
+            fullVideo: true
+        })
+        Orientation.lockToPortrait();
         this.props.navigation.goBack(null);
+        
     };
 
     _onPlayError = () => {
@@ -227,13 +374,16 @@ export default class VideoPlayScreen extends Component {
         }
     }
     componentDidMount(){
-        this.props.navigation.setParams({
-            fullVideo: true
-        })
+        // this.props.navigation.setParams({
+        //     fullVideo: true
+        // })
     }
     /// 点击了播放器正中间的播放按钮
     onPressPlayButton() {
         let isPlay = !this.state.isPlaying;
+        if (isPlay){
+
+        }
         this.setState({
             isPlaying: isPlay,
             showVideoCover: false
@@ -254,15 +404,13 @@ export default class VideoPlayScreen extends Component {
     /// 点击了工具栏上的全屏按钮
     onControlShrinkPress() {
         if (this.state.isFullScreen) {
-            console.log('1111');
             this.props.navigation.setParams({
-                fullVideo: true
+                fullVideo: false
             })
             Orientation.lockToPortrait();
         } else {
-            console.log('2222');
             this.props.navigation.setParams({
-                fullVideo:false
+                fullVideo:true
             })
             Orientation.lockToLandscape();
         }
@@ -366,10 +514,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 44,
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
         position: 'absolute',
         bottom: 0,
         left: 0
+    },
+    cdStyle: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around'
+    },
+    toolBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 10,
+        marginVertical: 30
     },
 });
 

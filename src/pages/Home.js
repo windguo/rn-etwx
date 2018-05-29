@@ -453,41 +453,6 @@ export default class Home extends Component {
                 <View>
                     <View style={{ backgroundColor: '#fff', paddingHorizontal: 20,paddingTop:10}}>
                         {this.renderTextAndImage(item,index)}
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                marginBottom:15,
-                                justifyContent: 'space-between',
-                            }}>
-                            <View style={{flexDirection: 'row'}}>
-                                <TouchableOpacity activeOpacity={1}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('Detail', { id: item.id, title: item.title });
-                                    }}
-                                    hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}>
-                                    <Text style={{ color:'#fe5f01'}}>查看全文 >></Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={{ flexDirection: 'row',marginLeft: 10}}>
-                                    <TouchableOpacity activeOpacity={1} onPress={()=>{this.PostThumb(item,1,index)}} hitSlop={{left:10,right:10,top:10,bottom:10}}>
-                                        {item.isLike ?   <IconSimple name="like" size={15} color='#027fff'/> : <IconSimple name="like" size={15} color='#888'/>}
-                                    </TouchableOpacity>
-                                    <Text style={{marginLeft: 5,color:'#999',fontWeight:'100'}}>{item.diggtop && item.diggtop}</Text>
-                                </View>
-                                <View style={{flexDirection: 'row', marginLeft: 10}}>
-                                    <TouchableOpacity activeOpacity={1} onPress={()=>{this.PostThumb(item,0,index)}} hitSlop={{left:10,right:10,top:10,bottom:10}}>
-                                        {item.isUnLike ?   <IconSimple name="dislike" size={15} color='#027fff'/> : <IconSimple name="dislike" size={15} color='#888'/>}
-                                    </TouchableOpacity>
-                                    <Text style={{marginLeft: 5,color:'#999',fontWeight:'100'}}>{item.diggbot && item.diggbot}</Text>
-                                </View>
-                                <View style={{flexDirection: 'row', marginLeft: 10}}>
-                                    <TouchableOpacity activeOpacity={1} onPress={()=> { this.show(item)}} hitSlop={{left:10,right:10,top:10,bottom:10}}>
-                                        <IconSimple name="share" size={15} color='#888'/>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
                     </View>
                 </View>
             </TouchableOpacity>

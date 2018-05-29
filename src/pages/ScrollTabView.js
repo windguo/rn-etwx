@@ -51,6 +51,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import urlConfig  from  '../utils/urlConfig';
 import storageKeys from '../utils/storageKeyValue';
 var DeviceInfo = require('react-native-device-info');
+import Orientation from 'react-native-orientation';
 import JPushModule from 'jpush-react-native';
 import HttpUtil from  '../utils/HttpUtil';
 const NativeVersion = DeviceInfo.getVersion();
@@ -137,6 +138,7 @@ export  default  class ScrollTabView extends Component {
 
     }
     componentDidMount() {
+        Orientation.lockToPortrait();
         this.InitJPush();
         this.readUserCache();
         if (Platform.OS === 'android'){
@@ -419,7 +421,7 @@ export  default  class ScrollTabView extends Component {
 
 }
     const header = {
-        backgroundColor: '#eee',
+        backgroundColor: '#ff2953',
         ...ifIphoneX({
             paddingTop: 44,
             height: 88

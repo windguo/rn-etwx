@@ -233,7 +233,7 @@ export  default  class ScrollTabView extends Component {
             })
 
             return <ScrollableTabBar activeTextColor='#fe5f01' underlineStyle={{height: 0,width:0}}
-                                     backgroundColor='white' textStyle={{fontSize: 16, fontWeight:'100'}}
+                backgroundColor='#fdf5ed' textStyle={{fontSize: 16, fontWeight:'100'}}
                                      tabStyle={{paddingLeft: 10, paddingRight: 10}} />;
         }
         pageNumber = (number) => {
@@ -290,7 +290,7 @@ export  default  class ScrollTabView extends Component {
     }
     }
     const header = {
-        backgroundColor: '#C7272F',
+        backgroundColor: '#ff2953',
         ...ifIphoneX({
             paddingTop: 44,
             height: 88

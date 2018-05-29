@@ -94,9 +94,11 @@ export  default  class Detail extends Component {
             if (isInstalled) {
                 if (type === 'Session') {
                     WeChat.shareToSession({
-                        imageUrl: this.state.data && this.state.data.nurl,
+                        title: "【儿童文学分享】",
+                        description: this.props.navigation.state.params.title,
                         type: 'news',
-                        webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
+                        webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id,
+                        thumbImage: urlConfig.thumbImage,
                     }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((e) => {
                         if (error.message != -2) {
                             Toast.show(error.message);
@@ -104,9 +106,11 @@ export  default  class Detail extends Component {
                     });
                 } else {
                     WeChat.shareToTimeline({
-                        imageUrl: this.state.data && this.state.data.nurl,
+                        title: "【儿童文学分享】" + this.props.navigation.state.params.title,
+                        // description: this.props.navigation.state.params.title,
                         type: 'news',
-                        webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
+                        webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id,
+                        thumbImage: urlConfig.thumbImage,
                     }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
                         if (error.message != -2) {
                             Toast.show(error.message);
@@ -149,9 +153,11 @@ export  default  class Detail extends Component {
                 if (isInstalled) {
                     if (data.wechat === 1) {
                         WeChat.shareToSession({
-                            imageUrl: this.state.data && this.state.data.nurl,
+                            title: "【儿童文学分享】",
+                            description: this.props.navigation.state.params.title,
                             type: 'news',
-                            webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
+                            webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id,
+                            thumbImage: urlConfig.thumbImage,
                         }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
                             if (error.message != -2) {
                                 Toast.show(error.message);
@@ -159,9 +165,11 @@ export  default  class Detail extends Component {
                         });
                     } else if (data.wechat === 2) {
                         WeChat.shareToSession({
-                            imageUrl: this.state.data && this.state.data.nurl,
+                            title: "【儿童文学分享】",
+                            description: this.props.navigation.state.params.title,
                             type: 'news',
-                            webpageUrl: urlConfig.ShareUrl + this.state.data.classid + '/' + this.state.data.id
+                            webpageUrl: urlConfig.ShareUrl + this.props.navigation.state.params.classid + '/' + this.props.navigation.state.params.id,
+                            thumbImage: urlConfig.thumbImage,
                         }).then((message) => { message.errCode === 0 ? this.ToastShow('分享成功') : this.ToastShow('分享失败') }).catch((error) => {
                             if (error.message != -2) {
                                 Toast.show(error.message);
@@ -183,7 +191,7 @@ export  default  class Detail extends Component {
     render() {
         return (
             <View>
-                <ScrollView>
+                <ScrollView style={{ marginBottom: 60 }}>
                     <View style={{ 
                             padding: 20, 
                             // backgroundColor:'#f8f8f8',

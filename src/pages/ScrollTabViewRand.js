@@ -289,8 +289,8 @@ export  default  class ScrollTabView extends Component {
         }
     }
     }
-    const header = {
-        backgroundColor: '#027fff',
+const header = {
+    backgroundColor: '#ff2953',
         ...ifIphoneX({
             paddingTop: 44,
             height: 88
