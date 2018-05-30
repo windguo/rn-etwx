@@ -393,65 +393,6 @@ export default class Home extends Component {
         }catch (e){}
     }
     
-    // renderTextAndImage = (item, index) => {
-    //     return <View>
-    //         <View>
-    //             <Text activeOpacity={0.8} onPress={() => {
-    //                 this.props.navigation.navigate(
-    //                     'Mp3Detail', { 
-    //                         id: item.id,
-    //                         title: item.title,
-    //                         titlepic: item.titlepic,
-    //                         nurl:item.nurl 
-    //                     });
-    //             }} style={{ fontSize: 18, paddingBottom: 10 }}>{item.title}</Text>
-    //         </View>
-    //         <View style={styles.imgposition}>
-    //             <View activeOpacity={0.8} onPress={() => {
-    //                 this.props.navigation.navigate(
-    //                     'Mp3Detail', {
-    //                         id: item.id,
-    //                         title: item.title,
-    //                         titlepic: item.titlepic,
-    //                         nurl: item.nurl
-    //                     });
-    //             }} >
-    //                 <Text onPress={() => {
-    //                     this.props.navigation.navigate(
-    //                         'Mp3Detail', {
-    //                             id: item.id,
-    //                             title: item.title,
-    //                             titlepic: item.titlepic,
-    //                             nurl: item.nurl
-    //                         });
-    //                 }}>
-    //                     {item.titlepic ? <ImageProgress
-    //                         source={{ uri: item.titlepic }}
-    //                         resizeMode={'cover'}
-    //                         indicator={Pie}
-    //                         indicatorProps={{
-    //                             size: 40,
-    //                             borderWidth: 0,
-    //                             color: 'rgba(255, 160, 0, 0.8)',
-    //                             unfilledColor: 'rgba(200, 200, 200, 0.1)'
-    //                         }}
-    //                         style={{ width: WIDTH - 40, height: 100 }} /> : null}
-    //                 </Text>
-    //                 <Text style={styles.absoluteView} onPress={() => {
-    //                     this.props.navigation.navigate(
-    //                         'Mp3Detail', {
-    //                             id: item.id,
-    //                             title: item.title,
-    //                             titlepic: item.titlepic,
-    //                             nurl: item.nurl
-    //                         });
-    //                 }}>
-    //                     <MaterialIcons name="play-circle-outline" size={45} color='#fe5f01' />
-    //                 </Text>
-    //             </View>
-    //         </View>
-    //     </View>
-    // }
     _renderItem = ({ item, index }) => {
         if (item.adType && item.picUrl) {
             return <TouchableOpacity activeOpacity={1} onPress={() => {
@@ -490,7 +431,7 @@ export default class Home extends Component {
                         }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <IconSimple name="music-tone" size={20} color={'grey'} />
-                                <Text activeOpacity={0.8} style={{ fontSize: 18, paddingLeft: 10 }}>{item.title}</Text>
+                                <Text activeOpacity={0.8} style={{ fontSize: 16, paddingLeft: 10 }}>{item.title}</Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text activeOpacity={0.8} style={{ fontSize: 18}}>

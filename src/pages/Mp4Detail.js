@@ -184,6 +184,16 @@ export default class VideoPlayScreen extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{ flexDirection: 'row', marginLeft: 10 }}
+                            onPress={() => {
+                                alert('缓存到本地');
+                            }}
+                        >
+                            <View style={styles.shareContent}>
+                                <MaterialIcons name="cloud-download" size={30} color='#fe5f01' />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ flexDirection: 'row', marginLeft: 10 }}
                             onPress={() => this.clickToReport()}
                         >
                             <View style={styles.shareContent}>

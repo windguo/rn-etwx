@@ -66,11 +66,13 @@ export  default  class ScrollTabView extends Component {
                             <MaterialIcons name="search" size={25} color='#ffffff' />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>儿童文学</Text>
+                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>看故事</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
+                        alert("去this.props.navigation.navigate('LocalDownload');"); return false;
                         navigation.state.routes[0].routes[0].params.rightFuc && navigation.state.routes[0].routes[0].params.rightFuc();
                     }}>
-                        <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
+                        <View style={{ justifyContent: 'center', marginRight: 10, alignItems: 'center', height: 43.7, width: 30 }}>
+                            <MaterialIcons name="cloud-download" size={25} color='#ffffff' />
                         </View>
                     </TouchableOpacity>
                 </ImageBackground>

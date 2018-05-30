@@ -30,6 +30,7 @@ import My from './pages/My/Index';
 import Publish from './pages/My/Publish'
 import Collection from './pages/My/Collection'
 import User from './pages/User'
+import LocalDownload from './pages/LocalDownload'
 
 import Creat from './pages/Creat/index';
 import CreatTag from './pages/Creat/creat';
@@ -105,6 +106,7 @@ const NavgationApp = StackNavigator({
     Publish: {screen: Publish},
     Collection: {screen: Collection},
     User: {screen: User},
+    LocalDownload: {screen: LocalDownload},
     CreatTag: {screen: CreatTag},
     SearchTag: {screen: SearchTag},
     Search:{screen:Search},

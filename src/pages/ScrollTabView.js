@@ -71,7 +71,7 @@ export  default  class ScrollTabView extends Component {
                             <MaterialIcons name="search" size={25} color='#ffffff' />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color:"#ffffff"}}>儿童文学</Text>
+                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>读故事</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
                         navigation.state.routes[0].routes[0].params.rightFuc && navigation.state.routes[0].routes[0].params.rightFuc();
                     }}>

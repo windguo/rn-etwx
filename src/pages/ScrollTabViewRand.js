@@ -66,11 +66,13 @@ export  default  class ScrollTabView extends Component {
                             <MaterialIcons name="search" size={25} color='#ffffff' />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>儿童文学</Text>
+                    <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>听故事</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
+                        alert("去this.props.navigation.navigate('LocalDownload');");return false;
                         navigation.state.routes[0].routes[0].params.rightFuc && navigation.state.routes[0].routes[0].params.rightFuc();
                     }}>
-                        <View style={{ justifyContent: 'center', marginLeft: 10, alignItems: 'center', height: 43.7, width: 20 }}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', height: 43.7, width: 30, marginRight:10 }}>
+                            <MaterialIcons name="cloud-download" size={25} color='#ffffff' />
                         </View>
                     </TouchableOpacity>
                 </ImageBackground>
@@ -121,18 +123,7 @@ export  default  class ScrollTabView extends Component {
        // WeChat.registerApp('wxd750cac4fb66b983');
         this.props.navigation.setParams({
             rightFuc: () => {
-                let url = '';
-                if (global.activeClassId === '0' || global.activeClassId === '1'){
-                    url = urlConfig.pubLishUrl;
-                }else{
-                    url = urlConfig.pubLishUrl + '/?classid=' + global.activeClassId;
-                }
-                if (global.userInfo){
-                    this.props.navigation.navigate('Web',{url:url});
-                }else{
-                    this.props.navigation.navigate('Login');
-                }
-
+                this.props.navigation.navigate('LocalDownload');
             },
             leftFuc: () => {
                 this.props.navigation.navigate('SearchTag');
