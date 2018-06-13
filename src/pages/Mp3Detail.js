@@ -44,6 +44,16 @@ export default class MusicPlayer extends Component {
             toValue: 1,
             duration: 6000,
             easing: Easing.inOut(Easing.linear)
+        });
+        this.resuleArray = [];
+        READ_CACHE(storageKeys.localMp3, (res) => {
+            if (res && res.length > 0) {
+                this.flatList && this.flatList.setData(res, 0);
+                this.resuleArray = res;
+            } else {
+                console.log('nothings');
+                this.resuleArray = [];
+            }
         })
     }
 
@@ -96,9 +106,22 @@ export default class MusicPlayer extends Component {
             hideOnPress: true,
             // delay: 100,
         });
-        this.spin()
+        this.spin();
+        this.loadData();
     }
-
+    loadData = async (resolve) => {
+        let url = urlConfig.contentApi + '&id=' + this.props.navigation.state.params.id;
+        console.log('loadUrl', url);
+        let res = await HttpUtil.GET(url);
+        console.log(res);
+        resolve && resolve();
+        if (this.props.index !== 0) { this.isNotfirstFetch = true };
+        let result = res.result ? res.result : [];
+        this.setState({
+            data: result,
+        });
+        console.log('res', res);
+    };
     setDuration(duration) {
         this.setState({
             spinValue: new Animated.Value(1)
@@ -351,11 +374,11 @@ export default class MusicPlayer extends Component {
                             <TouchableOpacity
                                 style={{ flexDirection: 'row', marginLeft: 10 }}
                                 onPress={() => { 
-                                    alert('缓存到本地');
+                                    this.clickToFava()
                                  }}
                             >
                                 <View style={styles.shareContent}>
-                                    <MaterialIcons name="cloud-download" size={30} color='#ffffff' />
+                                    <IconSimple name="folder-alt" size={30} color='#ffffff' />
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -401,6 +424,28 @@ export default class MusicPlayer extends Component {
         this.setState({ viewRef: findNodeHandle(this.backgroundImage) })
     }
 
+    clickToFava = () => {
+        let resu = {
+            title: this.state.data.title,
+            id: this.state.data.id,
+            classid: this.state.data.classid,
+            nurl: this.state.data.nurl,
+            titlepic: this.state.data.titlepic,
+        };
+        console.log('---===----');
+        console.log(resu);
+        this.resuleArray.push(resu);
+        WRITE_CACHE(storageKeys.localMp3, this.resuleArray);
+        Toast.show('本地收藏【' + this.state.data.title + '】成功,\n请到本地收藏的听故事查看。', {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.CENTER,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+        });
+    }
+    
     render() {
         return (
             this.props.navigation.state.params.titlepic ?

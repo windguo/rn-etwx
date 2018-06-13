@@ -39,6 +39,7 @@ import PullList from '../components/pull/PullList'
 import storageKeys from '../utils/storageKeyValue'
 import * as WeChat from 'react-native-wechat';
 import IconSimple from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HttpUtil from  '../utils/HttpUtil';
 import ImageProgress from 'react-native-image-progress';
 import {Pie,Bar,Circle,CircleSnail} from 'react-native-progress';
@@ -449,11 +450,18 @@ export default class Home extends Component {
         }
         return (
             <TouchableOpacity activeOpacity={1} onPress={() => {
+                this.props.navigation.navigate(
+                    'Detail', {
+                        id: item.id,
+                        title: item.title
+                    });
             }}>
-                <View>
-                    <View style={{ backgroundColor: '#fff', paddingHorizontal: 20,paddingTop:10}}>
-                        {this.renderTextAndImage(item,index)}
+                <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, backgroundColor: 'white', justifyContent: 'space-between' }}>
+                    <View style={{ marginLeft: 20, flexDirection: 'row', alignItems: 'center' }}>
+                        <IconSimple name="doc" size={20} color={Color.FontColor} />
+                        <Text style={{paddingLeft: 10 }}>{item.title}</Text>
                     </View>
+                    <IconSimple name="arrow-right" size={18} color={Color.FontColor} style={{ marginRight: 20 }} />
                 </View>
             </TouchableOpacity>
         )

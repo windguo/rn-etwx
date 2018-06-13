@@ -431,7 +431,7 @@ export default class Home extends Component {
                         }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <IconSimple name="music-tone" size={20} color={'grey'} />
-                                <Text activeOpacity={0.8} style={{ fontSize: 16, paddingLeft: 10 }}>{item.title}</Text>
+                                <Text activeOpacity={0.8} style={{paddingLeft: 10 }}>{item.title}</Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text activeOpacity={0.8} style={{ fontSize: 18}}>

@@ -11,6 +11,7 @@ const HEIGHT = Dimensions.get('window').height;
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ScrollView } from 'react-native-gesture-handler';
+import storageKeys from '../utils/storageKeyValue'
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -75,6 +76,37 @@ export default class VideoPlayScreen extends Component {
             isFullScreen: false,     // 当前是否全屏显示
             playFromBeginning: false, // 是否从头开始播放
         };
+        this.resuleArray = [];
+        READ_CACHE(storageKeys.localMp4, (res) => {
+            if (res && res.length > 0) {
+                this.flatList && this.flatList.setData(res, 0);
+                this.resuleArray = res;
+            } else {
+                console.log('nothings');
+                this.resuleArray = [];
+            }
+        })
+    }
+
+    clickToFava = () => {
+        let resu = {
+            title: this.props.navigation.state.params.title,
+            id: this.props.navigation.state.params.id,
+            classid: this.props.navigation.state.params.classid,
+            nurl: this.props.navigation.state.params.nurl,
+            titlepic: this.props.navigation.state.params.titlepic,
+        };
+        console.log('resuuuuuuuuu====',resu);
+        this.resuleArray.push(resu);
+        WRITE_CACHE(storageKeys.localMp4, this.resuleArray);
+        Toast.show('本地收藏【' + this.props.navigation.state.params.title + '】成功,\n请到本地收藏的看故事查看。', {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.CENTER,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+        });
     }
 
     render() {
@@ -185,11 +217,11 @@ export default class VideoPlayScreen extends Component {
                         <TouchableOpacity
                             style={{ flexDirection: 'row', marginLeft: 10 }}
                             onPress={() => {
-                                alert('缓存到本地');
+                                this.clickToFava()
                             }}
                         >
                             <View style={styles.shareContent}>
-                                <MaterialIcons name="cloud-download" size={30} color='#fe5f01' />
+                                <IconSimple name="folder-alt" size={30} color='#fe5f01' />
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -384,10 +416,21 @@ export default class VideoPlayScreen extends Component {
         }
     }
     componentDidMount(){
-        // this.props.navigation.setParams({
-        //     fullVideo: true
-        // })
+        this.loadData();
     }
+    loadData = async (resolve) => {
+        let url = urlConfig.contentApi + '&id=' + this.props.navigation.state.params.id;
+        console.log('loadUrl', url);
+        let res = await HttpUtil.GET(url);
+        console.log(res);
+        resolve && resolve();
+        if (this.props.index !== 0) { this.isNotfirstFetch = true };
+        let result = res.result ? res.result : [];
+        this.setState({
+            data: result,
+        });
+        console.log('res', res);
+    };
     /// 点击了播放器正中间的播放按钮
     onPressPlayButton() {
         let isPlay = !this.state.isPlaying;

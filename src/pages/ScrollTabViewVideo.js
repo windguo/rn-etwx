@@ -68,11 +68,10 @@ export  default  class ScrollTabView extends Component {
                     </TouchableOpacity>
                     <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>看故事</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
-                        alert("去this.props.navigation.navigate('LocalDownload');"); return false;
-                        navigation.state.routes[0].routes[0].params.rightFuc && navigation.state.routes[0].routes[0].params.rightFuc();
+                        navigation.navigate('LocalMp4');
                     }}>
                         <View style={{ justifyContent: 'center', marginRight: 10, alignItems: 'center', height: 43.7, width: 30 }}>
-                            <MaterialIcons name="cloud-download" size={25} color='#ffffff' />
+                            <IconSimple name="folder-alt" size={25} color={'#fff'} />
                         </View>
                     </TouchableOpacity>
                 </ImageBackground>
@@ -123,17 +122,7 @@ export  default  class ScrollTabView extends Component {
        // WeChat.registerApp('wxd750cac4fb66b983');
         this.props.navigation.setParams({
             rightFuc: () => {
-                let url = '';
-                if (global.activeClassId === '0' || global.activeClassId === '1'){
-                    url = urlConfig.pubLishUrl;
-                }else{
-                    url = urlConfig.pubLishUrl + '/?classid=' + global.activeClassId;
-                }
-                if (global.userInfo){
-                    this.props.navigation.navigate('Web',{url:url});
-                }else{
-                    this.props.navigation.navigate('Login');
-                }
+                this.props.navigation.navigate('LocalMp4');
 
             },
             leftFuc: () => {

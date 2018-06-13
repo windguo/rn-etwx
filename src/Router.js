@@ -30,9 +30,12 @@ import My from './pages/My/Index';
 import Publish from './pages/My/Publish'
 import Collection from './pages/My/Collection'
 import User from './pages/User'
-import LocalDownload from './pages/LocalDownload'
 
-import Creat from './pages/Creat/index';
+import LocalTxt from './pages/LocalTxt'
+import LocalMp3 from './pages/LocalMp3'
+import LocalMp4 from './pages/LocalMp4'
+
+import Creat from './pages/Creat/index'
 import CreatTag from './pages/Creat/creat';
 import Cdetail from './pages/Creat/detail';
 
@@ -106,7 +109,9 @@ const NavgationApp = StackNavigator({
     Publish: {screen: Publish},
     Collection: {screen: Collection},
     User: {screen: User},
-    LocalDownload: {screen: LocalDownload},
+    LocalTxt: {screen: LocalTxt},
+    LocalMp3: {screen: LocalMp3},
+    LocalMp4: {screen: LocalMp4},
     CreatTag: {screen: CreatTag},
     SearchTag: {screen: SearchTag},
     Search:{screen:Search},

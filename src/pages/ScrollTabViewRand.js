@@ -34,7 +34,6 @@ import {
     FlatList,
     AppState,
     NetInfo
-
 } from 'react-native';
 import LoadingSpinner from '../components/pull/LoadingSpinner';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
@@ -68,11 +67,10 @@ export  default  class ScrollTabView extends Component {
                     </TouchableOpacity>
                     <Text style={{ fontSize: 17, textAlign: 'center', lineHeight: 43.7, color: "#ffffff" }}>听故事</Text>
                     <TouchableOpacity activeOpacity={1} onPress={() => {
-                        alert("去this.props.navigation.navigate('LocalDownload');");return false;
-                        navigation.state.routes[0].routes[0].params.rightFuc && navigation.state.routes[0].routes[0].params.rightFuc();
+                        navigation.navigate('LocalMp3');
                     }}>
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 43.7, width: 30, marginRight:10 }}>
-                            <MaterialIcons name="cloud-download" size={25} color='#ffffff' />
+                            <IconSimple name="folder-alt" size={25} color={'#fff'} />
                         </View>
                     </TouchableOpacity>
                 </ImageBackground>
@@ -120,13 +118,14 @@ export  default  class ScrollTabView extends Component {
         }
         SplashScreen.hide();
         this.CodePushSync();
-       // WeChat.registerApp('wxd750cac4fb66b983');
+        // WeChat.registerApp('wx668fbd69c9f15c8b');
         this.props.navigation.setParams({
             rightFuc: () => {
-                this.props.navigation.navigate('LocalDownload');
+                alert("this.props.navigation.navigate('LocalMp3');");
+                this.props.navigation.navigate('LocalMp3');
             },
             leftFuc: () => {
-                this.props.navigation.navigate('SearchTag');
+                this.props.navigation.navigate('LocalMp3');
             }
         });
         InteractionManager.runAfterInteractions(() => {
